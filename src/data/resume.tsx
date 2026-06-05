@@ -125,7 +125,7 @@ export const DATA = {
     { href: "/blog", icon: NotebookIcon, label: "Blog" },
     { href: "/videos", icon: VideoIcon, label: "Videos" },
     { href: "/projects", icon: FolderIcon, label: "Projects" },
-    { href: "/gadgets", icon: Icons.shop, label: "Gadgets" },
+    // { href: "/gadgets", icon: Icons.shop, label: "Gadgets" },
   ],
   contact: {
     email: "zekai_ai@163.com",
