@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic';
 import { DATA } from "@/data/resume";
 import Link from "next/link";
-import Markdown from "react-markdown";
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { ProjectCard } from "@/components/project-card";
@@ -29,6 +28,22 @@ import { CodePenHoverCard } from "@/components/codepen-hover-card";
 import { VercelHoverCard } from "@/components/vercel-hover-card";
 import { BuyMeACoffeeHoverCard } from "@/components/bmc-hover-card";
 import { SteamNowPlaying } from "@/components/steam-now-playing";
+import {
+  HeroGreeting,
+  Summary,
+  SectionLabelI18n,
+  HeadingI18n,
+  ViewAllProjectsButton,
+  ContactMessage,
+  LetsTalkButton,
+  FooterTagline,
+  FooterLinks,
+  FooterMeta,
+  FooterSitemap,
+  FooterRss,
+  FooterSource,
+  FooterOpenSource,
+} from "@/components/i18n-content";
 
 const VisitorCounter = dynamic(() => import("@/components/visitor-counter"), {
   ssr: false,
@@ -45,7 +60,7 @@ export const metadata: Metadata = {
     siteName: DATA.name,
     images: [
       {
-        url: 'https://prasen.dev/portfolio.png',
+        url: `${DATA.url}/portfolio.png`,
         width: 1200,
         height: 630,
         alt: `${DATA.name}'s Portfolio`,
@@ -58,8 +73,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: DATA.name,
     description: DATA.summary,
-    creator: '@' + 'Star_Knight12',
-    images: ['https://prasen.dev/portfolio.png'],
+    creator: '@fzk888',
+    images: [`${DATA.url}/portfolio.png`],
   },
 };
 
@@ -67,14 +82,6 @@ const GithubContributions = dynamic(() => import("@/components/github-calendar")
   ssr: false,
   loading: () => <GithubSkeleton />
 });
-
-function SectionLabel({ label }: { label: string }) {
-  return (
-    <span className="inline-block text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground/60">
-      {label}
-    </span>
-  );
-}
 
 export default function Page() {
   return (
@@ -87,12 +94,11 @@ export default function Page() {
           <div className="mx-auto w-full space-y-8">
             <div className="flex flex-col-reverse items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex-col flex flex-1 space-y-1.5">
-                <BlurFadeText
-                  delay={BLUR_FADE_DELAY}
-                  className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
-                  yOffset={8}
-                  text={`hey, ${DATA.name.split(" ")[0]} here`}
-                />
+                <BlurFade delay={BLUR_FADE_DELAY}>
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                    <HeroGreeting />
+                  </h1>
+                </BlurFade>
                 <BlurFade delay={BLUR_FADE_DELAY * 1.5}>
                   <AgeCounter />
                 </BlurFade>
@@ -116,9 +122,7 @@ export default function Page() {
 
             {/* About */}
             <BlurFade delay={BLUR_FADE_DELAY * 3}>
-              <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
-                {DATA.summary}
-              </Markdown>
+              <Summary />
             </BlurFade>
 
             {/* Social links + Now Playing */}
@@ -233,8 +237,8 @@ export default function Page() {
         {/* ─── GITHUB ─── */}
         <section id="contributions">
           <BlurFade delay={BLUR_FADE_DELAY * 9}>
-            <SectionLabel label="Open Source" />
-            <h2 className="mt-1.5 text-xl font-bold tracking-tight">GitHub Contributions</h2>
+            <SectionLabelI18n labelKey="openSource" />
+            <h2 className="mt-1.5 text-xl font-bold tracking-tight"><HeadingI18n headingKey="githubContributions" /></h2>
             <div className="mt-3">
               <GithubContributions />
             </div>
@@ -246,8 +250,8 @@ export default function Page() {
         <section id="skills">
           <div className="flex min-h-0 flex-col gap-y-3">
             <BlurFade delay={BLUR_FADE_DELAY * 10}>
-              <SectionLabel label="Technologies" />
-              <h2 className="mt-1.5 text-xl font-bold tracking-tight">Tech Stack</h2>
+              <SectionLabelI18n labelKey="technologies" />
+              <h2 className="mt-1.5 text-xl font-bold tracking-tight"><HeadingI18n headingKey="techStack" /></h2>
             </BlurFade>
             <BlurFade delay={BLUR_FADE_DELAY * 10.5}>
               <div className="flex flex-wrap gap-2">
@@ -271,8 +275,8 @@ export default function Page() {
         <section id="projects">
           <div className="flex min-h-0 flex-col gap-y-3">
             <BlurFade delay={BLUR_FADE_DELAY * 11}>
-              <SectionLabel label="Portfolio" />
-              <h2 className="mt-1.5 text-xl font-bold tracking-tight">Featured Projects</h2>
+              <SectionLabelI18n labelKey="portfolio" />
+              <h2 className="mt-1.5 text-xl font-bold tracking-tight"><HeadingI18n headingKey="featuredProjects" /></h2>
             </BlurFade>
             <BlurFade delay={BLUR_FADE_DELAY * 11.5}>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -300,7 +304,7 @@ export default function Page() {
                 <ShinyButton
                   className="w-full sm:w-auto group transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] font-semibold"
                 >
-                  View All Projects →
+                  <ViewAllProjectsButton />
                 </ShinyButton>
               </Link>
             </BlurFade>
@@ -312,8 +316,8 @@ export default function Page() {
         <section id="work">
           <div className="flex min-h-0 flex-col gap-y-3">
             <BlurFade delay={BLUR_FADE_DELAY * 12}>
-              <SectionLabel label="Career" />
-              <h2 className="mt-1.5 text-xl font-bold tracking-tight">Work Experience</h2>
+              <SectionLabelI18n labelKey="career" />
+              <h2 className="mt-1.5 text-xl font-bold tracking-tight"><HeadingI18n headingKey="workExperience" /></h2>
             </BlurFade>
             <div className="space-y-3">
               {DATA.work.map((work, id) => (
@@ -344,8 +348,8 @@ export default function Page() {
         <section id="education">
           <div className="flex min-h-0 flex-col gap-y-3">
             <BlurFade delay={BLUR_FADE_DELAY * 13}>
-              <SectionLabel label="Academic" />
-              <h2 className="mt-1.5 text-xl font-bold tracking-tight">Education</h2>
+              <SectionLabelI18n labelKey="academic" />
+              <h2 className="mt-1.5 text-xl font-bold tracking-tight"><HeadingI18n headingKey="education" /></h2>
             </BlurFade>
             {DATA.education.map((education, id) => (
               <BlurFade
@@ -405,19 +409,19 @@ export default function Page() {
                 className="pointer-events-none absolute -top-24 left-1/2 h-56 w-56 -translate-x-1/2 rounded-full bg-foreground/10 blur-3xl"
               />
               <div className="relative z-10 flex flex-col items-center justify-center space-y-6">
-              <SectionLabel label="Get in touch" />
+              <SectionLabelI18n labelKey="getInTouch" />
               <p className="text-xl text-muted-foreground">
-               I'd love to hear from you.
+               <ContactMessage />
               </p>
               <a
-                href="mailto:prasen.nayak@hotmail.com"
+                href="mailto:zekai_ai@163.com"
                 className="inline-flex items-center gap-2.5 rounded-full border border-border/70 bg-background/70 px-5 py-2.5 text-sm font-medium shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-background"
               >
                 <Avatar className="size-6">
                   <AvatarImage src={DATA.avatarUrl} alt={DATA.name} />
                   <AvatarFallback>{DATA.initials}</AvatarFallback>
                 </Avatar>
-                Let's talk
+                <LetsTalkButton />
               </a>
               </div>
             </div>
@@ -431,13 +435,12 @@ export default function Page() {
               <div className="space-y-2">
                 <p className="text-sm font-medium">{DATA.name}</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Full Stack Developer from India.
-                  <br />Building modern web applications.
+                  <FooterTagline />
                 </p>
               </div>
 
               <div className="space-y-2">
-                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground/60">Links</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground/60"><FooterLinks /></p>
                 <div className="flex flex-col gap-1.5">
                   {DATA.navbar.slice(1).map((item) => (
                     <Link
@@ -452,21 +455,21 @@ export default function Page() {
               </div>
 
               <div className="space-y-2">
-                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground/60">Meta</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground/60"><FooterMeta /></p>
                 <div className="flex flex-col gap-1.5">
                   <Link href="/sitemap.xml" className="text-xs text-muted-foreground hover:text-foreground transition-colors w-fit">
-                    Sitemap
+                    <FooterSitemap />
                   </Link>
                   <Link href="/rss.xml" className="text-xs text-muted-foreground hover:text-foreground transition-colors w-fit">
-                    RSS Feed
+                    <FooterRss />
                   </Link>
                   <a
-                    href="https://github.com/StarKnightt/prasendev"
+                    href="https://github.com/fzk888"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-muted-foreground hover:text-foreground transition-colors w-fit"
                   >
-                    Source Code
+                    <FooterSource />
                   </a>
                 </div>
               </div>
@@ -474,7 +477,7 @@ export default function Page() {
 
             <div className="mt-8 flex flex-col gap-3 border-t border-border/30 pt-6 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs text-muted-foreground/60">
-                © {new Date().getFullYear()} {DATA.name}. Open source under{' '}
+                © {new Date().getFullYear()} {DATA.name}. <FooterOpenSource />{' '}
                 <a
                   href="https://opensource.org/licenses/MIT"
                   target="_blank"

@@ -1,6 +1,7 @@
 "use client";
 
 import { ModeToggle } from "@/components/mode-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -145,12 +146,14 @@ export default function Navbar() {
                     >
                       <Terminal className="size-4" />
                     </Link>
+                    <LanguageToggle />
                     <ModeToggle />
                   </div>
                 </div>
 
                 {/* Mobile controls */}
                 <div className="flex md:hidden items-center gap-1">
+                  <LanguageToggle />
                   <ModeToggle />
                   <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -310,6 +313,10 @@ export default function Navbar() {
                     <p>CLI Mode</p>
                   </TooltipContent>
                 </Tooltip>
+              </DockIcon>
+
+              <DockIcon>
+                <LanguageToggle />
               </DockIcon>
 
               <DockIcon>

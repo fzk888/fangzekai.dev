@@ -10,11 +10,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sparkles } from "lucide-react";
 
 const VERCEL_PROFILE = {
-  name: "Prasenjit Nayak",
-  handle: "starknightt",
-  avatar: "https://unavatar.io/github/StarKnightt",
-  tagline: "22, Engineer, freelancer",
-  prompts: 550,
+  name: "Fang Zekai",
+  handle: "fzk888",
+  avatar: "https://unavatar.io/github/fzk888",
+  tagline: "AI应用开发工程师",
+  prompts: 0,
 };
 
 export function VercelHoverCard({ children }: { children: ReactNode }) {

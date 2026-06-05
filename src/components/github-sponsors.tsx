@@ -110,7 +110,7 @@ export function GitHubSponsors() {
             Support my open source work and get your name featured here! ✨
           </p>
           <Link
-            href="https://github.com/sponsors/StarKnightt"
+            href="https://github.com/sponsors/fzk888"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
@@ -193,7 +193,7 @@ export function GitHubSponsors() {
         </div>
 
         <Link
-          href="https://github.com/sponsors/StarKnightt"
+          href="https://github.com/sponsors/fzk888"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-4 py-2 mt-6 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-sm font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"

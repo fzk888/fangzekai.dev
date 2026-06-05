@@ -275,7 +275,7 @@ export function CommandPalette() {
       description: "Visit LinkedIn profile",
       icon: <LinkedinIcon className="size-4" />,
       action: () => {
-        window.open("https://www.linkedin.com/in/prasenjitnayak/", "_blank");
+        window.open("", "_blank");
         setOpen(false);
       },
       keywords: ["linkedin", "profile", "professional"],
@@ -287,7 +287,7 @@ export function CommandPalette() {
       description: "Visit X profile",
       icon: <Icons.x className="size-4" />,
       action: () => {
-        window.open("https://x.com/Star_Knight12", "_blank");
+        window.open("", "_blank");
         setOpen(false);
       },
       keywords: ["x", "twitter", "social"],

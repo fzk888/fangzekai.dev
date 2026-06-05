@@ -78,7 +78,7 @@ const COMMANDS = {
   social: () => Object.entries(DATA.contact.social)
     .map(([platform, data]) => `${platform}: ${data.url}`)
     .join('\n'),
-  version: () => 'prasen.dev CLI v1.0.0',
+  version: () => 'fangzekai.dev CLI v1.0.0',
   clear: 'CLEAR',
   gui: 'GUI',
 };
@@ -112,7 +112,7 @@ function formatCommandLine(line: string, currentTheme: string | undefined) {
   if (line.startsWith('$')) {
     return (
       <>
-        <span className={currentTheme === 'dark' ? 'text-fuchsia-500' : 'text-fuchsia-600'}>dev@prasen:~</span>
+        <span className={currentTheme === 'dark' ? 'text-fuchsia-500' : 'text-fuchsia-600'}>dev@fangzekai:~</span>
         <span className={currentTheme === 'dark' ? 'text-green-400' : 'text-green-600'}>$</span>
         {' '}{line.slice(1)}
       </>
@@ -148,7 +148,7 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
     
     setIsMounted(true);
     setOutput([
-      isMobile ? 'Welcome to prasen.dev CLI! 👋' : ASCII_ART + '\nWelcome to my portfolio CLI! 👋',
+      isMobile ? 'Welcome to fangzekai.dev CLI! 👋' : ASCII_ART + '\nWelcome to my portfolio CLI! 👋',
       'Type "help" or "?" to see available commands.',
       ''
     ]);
@@ -317,7 +317,7 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
           {/* Terminal Input */}
           <form onSubmit={handleSubmit} className="flex items-center group sticky bottom-0 bg-zinc-900/80 backdrop-blur-sm py-2">
             <span className="text-fuchsia-500 [text-shadow:0_0_10px_theme(colors.fuchsia.500/40)] transition-all group-hover:[text-shadow:0_0_15px_theme(colors.fuchsia.500/60)]">
-              dev@prasen:~
+              dev@fangzekai:~
             </span>
             <span className="text-green-400">$</span>
             <input

@@ -10,11 +10,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users, Code2 } from "lucide-react";
 
 const CODEPEN_PROFILE = {
-  name: "Prasen",
-  username: "StarKnightt",
-  avatar: "https://unavatar.io/codepen/StarKnightt",
-  bio: "Hey, I'm Prasenjit who loves to do some magic with code.",
-  followers: 319,
+  name: "Fang Zekai",
+  username: "fzk888",
+  avatar: "https://unavatar.io/github/fzk888",
+  bio: "AI应用开发工程师",
+  followers: 0,
 };
 
 function StatPill({

@@ -10,11 +10,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users, Briefcase } from "lucide-react";
 
 const LINKEDIN_PROFILE = {
-  name: "Prasenjit Nayak",
-  headline: "making code alive",
-  avatar: "https://unavatar.io/linkedin/prasenjitnayak",
-  connections: "500+",
-  followers: 2116,
+  name: "Fang Zekai",
+  headline: "AI应用开发工程师",
+  avatar: "",
+  connections: "0",
+  followers: 0,
 };
 
 export function LinkedInHoverCard({ children }: { children: ReactNode }) {

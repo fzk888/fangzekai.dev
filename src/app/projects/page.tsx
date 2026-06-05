@@ -5,7 +5,7 @@ import { ProjectCard } from "@/components/project-card";
 
 export const metadata = {
   title: "Projects",
-  description: "Web applications and open source projects built with React, Next.js, TypeScript, and Node.js by Prasenjit Nayak.",
+  description: "AI and software projects by Fang Zekai.",
 };
 
 const BLUR_FADE_DELAY = 0.04;

@@ -12,7 +12,7 @@ export const DATA = {
   description:
     "",
   summary:
-    "Currently **freelancing** and **collaborating** with new people on exciting projects.\n\nI love playing [video games](https://www.youtube.com/@StarKnight-12) and share thoughts on tech [here](https://www.youtube.com/@Star_Knight12).\n\nHere's what I think about the [future of computer science](https://www.prasen.dev/blog/hello-world).\n\nI also enjoy [touch typing](https://monkeytype.com/profile/prasenj4551R) in my free time, bullish on AI and future technologies",
+    "Currently building **AI applications** and **Agent systems** with LLM.\n\nI'm passionate about [RAG](https://github.com/fzk888/Doc_QA), [AI Agent](https://github.com/fzk888/GraphRAG-Assistant), and turning research into real products.\n\nBullish on AI and the future of intelligent applications.",
 
   avatarUrl: "/prasen.webp",
   skills: [
@@ -139,52 +139,14 @@ export const DATA = {
       },
       LinkedIn: {
         name: "LinkedIn",
-        url: "https://www.linkedin.com/in/prasenjitnayak/",
+        url: "",
         icon: Icons.linkedin,
-
-        navbar: true,
+        navbar: false,
       },
       X: {
         name: "X",
-        url: "https://x.com/Star_Knight12",
+        url: "",
         icon: Icons.x,
-
-        navbar: true,
-      },
-      Youtube: {
-        name: "Youtube",
-        url: "https://youtube.com/@Star_Knight12",
-        icon: Icons.youtube,
-        navbar: true,
-      },
-      Instagram: {
-        name: "Instagram",
-        url: "https://www.instagram.com/starknight_143/",
-        icon: Icons.instagram,
-        navbar: true,
-      },
-      Steam: {
-        name: "Steam",
-        url: "https://s.team/p/hpdv-frbg/prvbvwtg",
-        icon: Icons.steam,
-        navbar: true,
-      },
-      CodePen: {
-        name: "CodePen",
-        url: "https://codepen.io/StarKnightt",
-        icon: Icons.codepen,
-        navbar: true,
-      },
-      Vercel: {
-        name: "Vercel",
-        url: "https://v0.link/prasenjit-nayak",
-        icon: Icons.vercel,
-        navbar: true,
-      },
-      buyMeACoffee: {
-        name: "buyMeACoffee",
-        url: "https://buymeacoffee.com/prasen",
-        icon: Icons.buyMeACoffee,
         navbar: false,
       },
       email: {
@@ -224,7 +186,7 @@ export const DATA = {
     },
     {
       company: "Freelance",
-      href: "https://github.com/StarKnightt",
+      href: "https://github.com/fzk888",
       badges: [],
       location: "Remote",
       title: "Frontend Developer",
@@ -236,7 +198,7 @@ export const DATA = {
     },
     {
       company: "v0 by Vercel",
-      href: "https://v0.app/@starknightt",
+      href: "https://github.com/fzk888",
       badges: [],
       location: "Remote",
       title: "v0 Ambassador",

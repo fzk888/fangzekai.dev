@@ -8,31 +8,23 @@ export function PersonSchema() {
         __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Person",
-          name: "Prasenjit Nayak",
-          alternateName: ["Prasen", "Star Knight"],
+          name: "Fang Zekai",
+          alternateName: ["方泽铠", "fangzekai"],
           description: DATA.description,
           image: `${DATA.url}/me.png`,
           url: DATA.url,
           sameAs: [
             DATA.contact.social.GitHub.url,
-            DATA.contact.social.LinkedIn.url,
-            DATA.contact.social.X.url,
-            DATA.contact.social.Youtube.url,
-            DATA.contact.social.CodePen.url,
-          ],
-          jobTitle: "Full Stack Developer",
-          worksFor: {
-            "@type": "Organization",
-            name: "Freelance"
-          },
+          ].filter(Boolean),
+          jobTitle: "AI应用工程师 / 大模型算法工程师 / Agent 开发工程师 / 全栈开发工程师",
           alumniOf: {
             "@type": "CollegeOrUniversity",
-            name: "Trident Academy Of Technology"
+            name: "Guangzhou City University of Technology"
           },
           address: {
             "@type": "PostalAddress",
-            addressLocality: "Odisha",
-            addressCountry: "India"
+            addressLocality: "Guangdong",
+            addressCountry: "China"
           },
           email: DATA.contact.email,
           knowsAbout: DATA.skills

@@ -10,11 +10,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, Coffee } from "lucide-react";
 
 const BMC_PROFILE = {
-  name: "Prasenjit",
-  handle: "prasen",
-  avatar: "https://unavatar.io/buymeacoffee/prasen",
-  tagline: "Love to create magic with code",
-  supporters: 2,
+  name: "Fang Zekai",
+  handle: "fangzekai",
+  avatar: "",
+  tagline: "AI应用开发工程师",
+  supporters: 0,
 };
 
 export function BuyMeACoffeeHoverCard({ children }: { children: ReactNode }) {

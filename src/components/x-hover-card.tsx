@@ -10,12 +10,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users } from "lucide-react";
 
 const X_PROFILE = {
-  name: "Prasenjit",
-  handle: "Star_Knight12",
-  avatar: "https://unavatar.io/x/Star_Knight12",
-  description: "making code alive",
-  followers: 20700,
-  verified: true,
+  name: "Fang Zekai",
+  handle: "",
+  avatar: "",
+  description: "AI应用开发工程师",
+  followers: 0,
+  verified: false,
 };
 
 function StatPill({
