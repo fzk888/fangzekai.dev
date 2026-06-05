@@ -251,9 +251,9 @@ export function CommandPalette() {
     {
       id: "copy-email",
       label: "Copy Email",
-      description: "prasen.nayak@hotmail.com",
+      description: "zekai_ai@163.com",
       icon: copied ? <CheckIcon className="size-4" /> : <CopyIcon className="size-4" />,
-      action: () => copyToClipboard("prasen.nayak@hotmail.com"),
+      action: () => copyToClipboard("zekai_ai@163.com"),
       keywords: ["copy", "email", "contact"],
       group: "Actions",
     },
@@ -263,7 +263,7 @@ export function CommandPalette() {
       description: "Visit GitHub profile",
       icon: <GithubIcon className="size-4" />,
       action: () => {
-        window.open("https://github.com/StarKnightt", "_blank");
+        window.open("https://github.com/fzk888", "_blank");
         setOpen(false);
       },
       keywords: ["github", "profile", "code"],

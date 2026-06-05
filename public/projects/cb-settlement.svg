@@ -1,0 +1,17 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="720" fill="#071114"/>
+  <rect x="70" y="70" width="1060" height="580" rx="30" fill="#0f1a1d" stroke="#25444b" stroke-width="2"/>
+  <rect x="210" y="175" width="780" height="310" rx="22" fill="#0b1416" stroke="#2f6f7c" stroke-width="3"/>
+  <g stroke="#67e8f9" stroke-width="3" opacity=".85">
+    <path d="M250 250h700M250 320h700M250 390h700M420 200v285M650 200v285M820 200v285"/>
+  </g>
+  <g fill="#cffafe" font-family="Arial, sans-serif" font-size="28" font-weight="700">
+    <text x="270" y="235">ORDER</text><text x="455" y="235">AMOUNT</text><text x="685" y="235">FEE</text><text x="850" y="235">NET</text>
+  </g>
+  <g fill="#94a3b8" font-family="Arial, sans-serif" font-size="26">
+    <text x="270" y="300">A-1024</text><text x="455" y="300">$328</text><text x="685" y="300">$18</text><text x="850" y="300">$310</text>
+    <text x="270" y="370">B-2048</text><text x="455" y="370">$716</text><text x="685" y="370">$42</text><text x="850" y="370">$674</text>
+  </g>
+  <text x="100" y="575" fill="#f8fafc" font-family="Arial, sans-serif" font-size="76" font-weight="700">CB-Settlement</text>
+  <text x="104" y="625" fill="#94a3b8" font-family="Arial, sans-serif" font-size="30">Cross-border ecommerce revenue settlement</text>
+</svg>

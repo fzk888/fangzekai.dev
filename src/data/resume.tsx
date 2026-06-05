@@ -4,11 +4,11 @@ import { faReact, faNodeJs, faGitAlt, faTypescript, faTailwindCss, faDocker, faF
 import { faLeaf, faPlug, faBolt, faTerminal, faRocket, faServer, faDatabase, faCode } from "@fortawesome/free-solid-svg-icons";
 
 export const DATA = {
-  name: "Prasenjit Nayak",
-  initials: "PN",
-  url: "https://www.prasen.dev",
-  location: "Odisha, India",
-  locationLink: "https://www.google.com/maps/place/odisha",
+  name: "fangzekai",
+  initials: "FZK",
+  url: "https://fangzekai.vercel.app",
+  location: "Guangdong, China",
+  locationLink: "https://www.google.com/maps/place/Guangdong",
   description:
     "",
   summary:
@@ -128,11 +128,11 @@ export const DATA = {
     { href: "/gadgets", icon: Icons.shop, label: "Gadgets" },
   ],
   contact: {
-    email: "prasen.nayak@hotmail.com",
+    email: "zekai_ai@163.com",
     social: {
       GitHub: {
         name: "GitHub",
-        url: "https://github.com/StarKnightt",
+        url: "https://github.com/fzk888",
         icon: Icons.github,
 
         navbar: true,
@@ -189,7 +189,7 @@ export const DATA = {
       },
       email: {
         name: "Send Email",
-        url: "mailto:prasen.nayak@hotmail.com",
+        url: "mailto:zekai_ai@163.com",
         icon: Icons.email,
         navbar: false,
       },
@@ -248,295 +248,129 @@ export const DATA = {
   ],
   education: [
     {
-      school: "Trident Academy Of Technology",
-      href: "https://tat.ac.in/",
-      degree: "B.Tech in Computer Science and Information Technology",
+      school: "Guangzhou City University of Technology",
+      href: "https://www.gcut.edu.cn/",
+      degree: "Bachelor of Engineering in Artificial Intelligence",
       logoUrl: "/buildspace.webp",
-      start: "2020",
-      end: "2024",
-    },
-    {
-      school: "Netaji Subhas Memorial City College",
-      href: "https://www.nsmcity.ac.in/index.asp",
-      degree: "Higher Secondary",
-      logoUrl: "/waterloo.webp",
-      start: "2019",
-      end: "2020",
+      start: "2022",
+      end: "2026",
     },
   ],
   projects: [
     {
-      title: "Next.js Learning",
-      href: "https://learn.prasen.dev/",
-      dates: "May 2026 - Present",
+      title: "Doc_QA",
+      href: "https://github.com/fzk888/Doc_QA",
+      dates: "2026",
       active: true,
       description:
-        "A free, open-source interactive learning platform for mastering Next.js with 17 structured chapters from basics to production patterns. Features Ctrl+K search, in-site video player, interactive architecture diagrams, and neo-brutalism design.",
+        "RAG 知识库问答系统，面向文档资料构建检索增强问答流程，支持从知识库中检索相关内容并生成回答。",
       technologies: [
-        "Next.js 16",
-        "React 19",
-        "TypeScript",
-        "Tailwind CSS v4",
-        "Framer Motion",
-        "Vercel",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://learn.prasen.dev/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/StarKnightt/Next.JS-Learning",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "",
-      video: "https://video.gumlet.io/6745e593080b60408ca085f7/6a16bc92d99287327250b129/download.mp4",
-    },
-    {
-      title: "Dateup",
-      href: "https://dateup.in",
-      dates: "April 2026 - Present",
-      active: true,
-      description:
-        "An AI-powered dating profile optimizer that helps you get more matches. Features AI photo enhancement, a rizz assistant for conversation starters, and a profile reviewer for actionable feedback.",
-      technologies: [
-        "Next.js",
-        "Supabase",
-        "TypeScript",
-        "TailwindCSS",
-        "xAI Grok",
-        "OpenAI",
-        "Groq",
-        "Dodo Payments",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://dateup.in",
-          icon: <Icons.globe className="size-3" />,
-        },
-      ],
-      image: "",
-      video: "https://video.gumlet.io/6745e593080b60408ca085f7/69fc6b4498a4e5006b3c5cb6/download.mp4",
-    },
-    {
-      title: "CleanType",
-      href: "https://clean-type.vercel.app/",
-      dates: "March 2025 - April 2025",
-      active: true,
-      description:
-        "A super minimalist write experience, type with minimalist, no noise and distraction, completely fresh Windows app, with a clean UI and no ads, just pure writing experience.",
-      technologies: [
-        "Rust",
-        "Tauri",
-        "Typescript",
-        "CSS",
-        "Vite",
-        "Git",
-        "React",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://www.cleantype.software/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/StarKnightt/CleanType",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "",
-      video: "https://video.gumlet.io/6745e593080b60408ca085f7/68011ca73ab3a7b826bbfac0/download.mp4",
-    },
-    {
-      title: "Wallpaperz",
-      href: "https://www.wallpaperz.in/",
-      dates: "January 2025 - February 2025",
-      active: true,
-      description:
-        "A modern wallpaper discovery platform where you can find stunning wallpapers and generate images with AI.",
-      technologies: [
-        "Next.js",
-        "Git",
-        "TailwindCSS",
-        "Framer-motion",
-        "TypeScript",
-        "Imagekit",
-        "shadcnUI",
-        "DreamStudio",
-        "Stability AI",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://www.wallpaperz.in/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/StarKnightt/wallpaperz",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "",
-      video: "https://video.gumlet.io/6745e593080b60408ca085f7/67d5057eefcecbdea7560e35/download.mp4",
-    },
-    {
-      title: "3D Carousel Gallery",
-      href: "https://3dcarousell.vercel.app/",
-      dates: "December 2024 - January 2025",
-      active: true,
-      description:
-        "A beautiful and interactive 3D carousel gallery built with Next.js, featuring image and video support with an integrated music player.",
-      technologies: [
-        "Next.js",
-        "CSS 3D Transform",
-        "SoundCloud Widget API",
-        "Modern-Javascript",
-        "Vercel",
-        "Git",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://3dcarousell.vercel.app/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/StarKnightt/3D-Carousel",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "",
-      video:
-        "https://video.gumlet.io/6745e593080b60408ca085f7/67912b93d696a7af3b2e38ef/download.mp4",
-    },
-    {
-      title: "GitHub Buddy Finder",
-      href: "https://buddy-find.vercel.app/",
-      dates: "April 2023 - September 2023",
-      active: true,
-      description:
-        "This innovative web application helps developers connect with like-minded individuals based on their GitHub activity and language preferences.",
-      technologies: [
-        "React.js",
-        "Octokit",
-        "Rest API",
-        "TailwindCSS",
-        "react-icons",
-        "react-router-dom",
-        "Vite",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://buddy-find.vercel.app/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/StarKnightt/Buddy-Finder",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "",
-      video: "https://video.gumlet.io/6745e593080b60408ca085f7/6745ec82c84c6b7e105c3ee5/download.mp4",
-    },
-    {
-      title: "Solar System",
-      href: "https://solarrsystem.vercel.app/",
-      dates: "September 2024 - October 2024",
-      active: true,
-      description:
-        "This project is a visually stunning and interactive web application that provides information about the solar system and it's planet with music.",
-      technologies: [
-        "React.js",
-        "font-awesome",
-        "react-icons",
-        "react-dom",
-        "CSS3",
-        "Vite",
-        "Git",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://solarrsystem.vercel.app/",
-          icon: <Icons.globe className="size-3" />,
-        },
-      ],
-      image: "",
-      video:
-        "https://video.gumlet.io/6745e593080b60408ca085f7/6745ef75b79a267f99668bda/download.mp4",
-    },
-    {
-      title: "Coffee-Website",
-      href: "https://coffee-websitee.vercel.app/",
-      dates: "September 2024 - October 2024",
-      active: true,
-      description:
-        "A web app, with the futurisitc yet nostalgic design of a coffee shop, with a menu and blend of retro vibes.",
-      technologies: [
-        "React.js",
-        "Git",
-        "TailwindCSS",
-        "Framer-motion",
-        "React-icons",
-        "React-router-dom",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://coffee-websitee.vercel.app/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/StarKnightt/Coffee-Website",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "",
-      video: "https://video.gumlet.io/6745e593080b60408ca085f7/6745ea2d080b60408ca0bc08/download.mp4",
-    },
-    {
-      title: "Resume Builder",
-      href: "https://resume-builder-ten-opal.vercel.app/",
-      dates: "May 2023 - Sept 2023",
-      active: true,
-      description:
-        "It was my final year [Project](https://github.com/StarKnightt/ResumeBuilder) in our college, It is a interactive and versatile Dynamic CV Builder, completely build from scratch with backend functionallity .",
-      technologies: [
-        "CSS",
-        "javascript",
-        "MongoDB",
-        "Express.js",
+        "Python",
+        "RAG",
         "HTML",
-        "Regex",
-        "Node.js",
+        "ReScript",
       ],
       links: [
         {
-          type: "Website",
-          href: "https://builddresume.vercel.app/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
           type: "Source",
-          href: "https://github.com/StarKnightt/ResumeBuilder",
+          href: "https://github.com/fzk888/Doc_QA",
           icon: <Icons.github className="size-3" />,
         },
       ],
-      
-      image: "",
-      video:
-        "https://video.gumlet.io/6745e593080b60408ca085f7/6745e5e5080b60408ca08984/download.mp4",
+      image: "/projects/doc-qa.svg",
+      video: "",
+    },
+    {
+      title: "GraphRAG-Assistant",
+      href: "https://github.com/fzk888/GraphRAG-Assistant",
+      dates: "2025",
+      active: true,
+      description:
+        "基于 LangGraph 构建的 RAG 智能客服系统，通过图式工作流组织检索、推理和回答生成流程。",
+      technologies: [
+        "Python",
+        "LangGraph",
+        "RAG",
+        "LLM",
+      ],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/fzk888/GraphRAG-Assistant",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/projects/graphrag-assistant.svg",
+      video: "",
+    },
+    {
+      title: "VehicleDetection_YOLOv12",
+      href: "https://github.com/fzk888/VehicleDetection_YOLOv12",
+      dates: "2026",
+      active: true,
+      description:
+        "基于 YOLOv12 的实时车辆检测与分类系统，用于识别图像或视频中的车辆目标并完成分类。",
+      technologies: [
+        "Python",
+        "YOLOv12",
+        "Computer Vision",
+        "Object Detection",
+      ],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/fzk888/VehicleDetection_YOLOv12",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/projects/vehicle-detection-yolov12.svg",
+      video: "",
+    },
+    {
+      title: "Tiny Traffic Sign Detection",
+      href: "https://github.com/fzk888/Tiny-Traffic-Sign-Intelligent-Detection-and-Recognition-System",
+      dates: "2026",
+      active: true,
+      description:
+        "小目标交通标志智能检测与识别系统，聚焦复杂交通场景下小尺寸标志目标的检测与识别。",
+      technologies: [
+        "Python",
+        "Computer Vision",
+        "Object Detection",
+        "Traffic Sign Recognition",
+      ],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/fzk888/Tiny-Traffic-Sign-Intelligent-Detection-and-Recognition-System",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/projects/tiny-traffic-sign-detection.svg",
+      video: "",
+    },
+    {
+      title: "CB-Settlement",
+      href: "https://github.com/fzk888/CB-Settlement",
+      dates: "2026",
+      active: true,
+      description:
+        "跨境电商收入核算系统，用于处理业务收入、订单结算和核算流程，提升数据整理与财务统计效率。",
+      technologies: [
+        "Python",
+        "Data Processing",
+        "Settlement",
+        "Automation",
+      ],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/fzk888/CB-Settlement",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/projects/cb-settlement.svg",
+      video: "",
     }
   ],
   hackathons: [

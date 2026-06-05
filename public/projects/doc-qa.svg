@@ -1,0 +1,13 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="720" fill="#0b0f14"/>
+  <rect x="70" y="70" width="1060" height="580" rx="30" fill="#111827" stroke="#263241" stroke-width="2"/>
+  <circle cx="900" cy="210" r="130" fill="#22c55e" opacity=".16"/>
+  <circle cx="255" cy="492" r="190" fill="#14b8a6" opacity=".14"/>
+  <g fill="none" stroke="#34d399" stroke-width="5" stroke-linecap="round">
+    <path d="M220 220h330M220 290h250M220 360h375M220 430h210"/>
+    <rect x="710" y="190" width="270" height="300" rx="22"/>
+    <path d="M760 270h170M760 330h120M760 390h150"/>
+  </g>
+  <text x="100" y="560" fill="#f8fafc" font-family="Arial, sans-serif" font-size="76" font-weight="700">Doc_QA</text>
+  <text x="104" y="615" fill="#94a3b8" font-family="Arial, sans-serif" font-size="30">RAG knowledge base question answering</text>
+</svg>

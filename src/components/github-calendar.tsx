@@ -41,7 +41,7 @@ export function GithubContributions() {
         ) : (
           <div className="overflow-x-auto p-4 -mx-1">
             <GitHubCalendar
-              username="StarKnightt"
+              username="fzk888"
               colorScheme={resolvedTheme as "light" | "dark"}
               fontSize={12}
               blockSize={12}
