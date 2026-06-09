@@ -12,7 +12,7 @@ export const DATA = {
   description:
     "",
   summary:
-    "Currently building **AI applications** and **Agent systems** with LLM.\n\nI'm passionate about [RAG](https://github.com/fzk888/Doc_QA), [AI Agent](https://github.com/fzk888/GraphRAG-Assistant), and turning research into real products.\n\nBullish on AI and the future of intelligent applications.",
+    "Currently working on AI application development. I love collaborating with new people on exciting projects.\n\nWhen I'm not coding, I'm usually playing Honor of Kings or hitting the gym.\n\nHere's my take on the [future of computer science](https://www.prasen.dev/blog/hello-world).\n\nBullish on AI and future technologies.",
 
   avatarUrl: "/prasen.webp",
   skills: [

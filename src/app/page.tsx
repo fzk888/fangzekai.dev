@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import { DATA } from "@/data/resume";
 import Link from "next/link";
+import Markdown from "react-markdown";
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { ProjectCard } from "@/components/project-card";
@@ -29,8 +30,6 @@ import { VercelHoverCard } from "@/components/vercel-hover-card";
 import { BuyMeACoffeeHoverCard } from "@/components/bmc-hover-card";
 import { SteamNowPlaying } from "@/components/steam-now-playing";
 import {
-  HeroGreeting,
-  Summary,
   SectionLabelI18n,
   HeadingI18n,
   ViewAllProjectsButton,
@@ -94,11 +93,12 @@ export default function Page() {
           <div className="mx-auto w-full space-y-8">
             <div className="flex flex-col-reverse items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex-col flex flex-1 space-y-1.5">
-                <BlurFade delay={BLUR_FADE_DELAY}>
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    <HeroGreeting />
-                  </h1>
-                </BlurFade>
+                <BlurFadeText
+                  delay={BLUR_FADE_DELAY}
+                  className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
+                  yOffset={8}
+                  text={`hey, ${DATA.name.split(" ")[0]} here`}
+                />
                 <BlurFade delay={BLUR_FADE_DELAY * 1.5}>
                   <AgeCounter />
                 </BlurFade>
@@ -122,7 +122,9 @@ export default function Page() {
 
             {/* About */}
             <BlurFade delay={BLUR_FADE_DELAY * 3}>
-              <Summary />
+              <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
+                {DATA.summary}
+              </Markdown>
             </BlurFade>
 
             {/* Social links + Now Playing */}
