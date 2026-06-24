@@ -1,110 +1,172 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
-import { ClientTweetCard } from "@/components/ui/client-tweet-card";
-import { TweetSkeleton } from "@/components/ui/tweet-card";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, MessageCircle, Send } from "lucide-react";
 
-// Just add tweet IDs from the URL: https://x.com/username/status/[ID]
-const tweetIds = [
-  "1862049464807989608", // @trikcode
-  "1868648019119522142", // @Rahulsainlll
-  "1861928255571251644", // @STONKS_IU
-  "1861817928930431234", // @IzharThouf29718
-  "1861836674637914410", // @kola1023
-  "1861839293460713877", // @venelinkochev
-  "1861815322115805402", // @SwatiSarangi10
-  "1861832590766068017", // @AdhikariYash_
-  "1862177812376862890", // @raaam_02
-  "1862394170079416582", // @Arman_Officialx
-  "1861834592170197289", // @AaryanBajaj18
-  "1861995257891885277", // @Its_Shiv_Kumarr
-  "1862057865105596661", // @csaba_kissi
-  "1861817455032578394", // @that_tallguy_1
-  "1862389476225331622", // @o_stefanishyna
-  "1861818760132272528", // @michael_c_law
-  "1861816928509239710", // @itsrajputamit
-  "1861851783598948414", // @_ndeyefatoudiop
-  "1862134432452292849", // @ataeijo
-  "1861959993332830716", // @adyingdeath
-  "1862047439416680606", // @AyanDas_
-  "1861880157759320380", // @Makanta__
-  "1861999738360570195", // @Criticalway_
-  "1862052926698492034", // @antduchofficial
-  "1862093344395886593", // @raimonvibe
-  "1862460639069052951", // @SanjayTomar_
-  "1862154797786288236", // @AbdulSonaike
-  "1862217676028092752", // @ShajahanArham
-  "1897308522733559891", // @SaidAitmbarek
-  "1897271067116495138", // @CornelisseJoran
-  "1897390654222950482", // @Adarsh_Web3
-  "1897523143625118146", // @atharvatwts
-  "1897333575336517950", // @vivek_naskar
-  "1897510197276631350", // @Shefali__J
-  "1897512161532092756", // @sonam_murarkar
-  "1897786499795431872", // @disarto_max
-  "1938129572194644377", // @Abhishekcur
-  "1938126895184335120", // @sevalla_hosting
-  "1930892318321553902", // @the__csy20
-  "1930627899830554789", // @Abhinavstwt
-  "1930629574297055653", // @kayleecodez
-  "1930719843344695464", // @Heydivyamsharma
-  "1900272386144190585", // @that_tallguy_1
-  "2005976916696670364", // @Henrylabss
-  "2006365355573453014", // @itz_rushi_21
-  "1930648396467200298", // @shubhstwt
-  "1930677255614722543", // @developertomek
-  "1930644230235685183", // @shayanc__
-  "1930647273039376406", // @podsumguy
-  "1930731875066339409", // @christiannonis
-  "1930696477426500066", // @abhiix4
-  "1930680531471261714", // @kshitij_sorted
-  "1930907083194433924", // @chuurro_o
-  "1900470345058169048", // @code_kartik
-  "1900371624869720176", // @mvyk0l
+type GuestbookNote = {
+  id: string;
+  message: string;
+  author: string;
+  createdAt: string;
+  tone: "sky" | "lime" | "rose" | "violet" | "amber" | "slate";
+};
+
+const MAX_MESSAGE_LENGTH = 120;
+
+const starterNotes: GuestbookNote[] = [
+  {
+    id: "starter-1",
+    message: "这个站点很有个人气质，继续做下去会很酷。",
+    author: "匿名朋友",
+    createdAt: "刚刚",
+    tone: "sky",
+  },
+  {
+    id: "starter-2",
+    message: "路过留一句：AI 项目和博客都可以继续更，想看。",
+    author: "路过的人",
+    createdAt: "今天",
+    tone: "lime",
+  },
+  {
+    id: "starter-3",
+    message: "这个页面的氛围很舒服，有种真的有人在认真搭自己空间的感觉。",
+    author: "访客",
+    createdAt: "昨天",
+    tone: "rose",
+  },
+  {
+    id: "starter-4",
+    message: "加油，慢慢把它改成完全属于你的作品集。",
+    author: "朋友",
+    createdAt: "2 天前",
+    tone: "violet",
+  },
+  {
+    id: "starter-5",
+    message: "想看更多你做 Agent 和 RAG 的项目记录。",
+    author: "匿名朋友",
+    createdAt: "3 天前",
+    tone: "amber",
+  },
+  {
+    id: "starter-6",
+    message: "保持这种探索感，网站会越来越像你。",
+    author: "某位同学",
+    createdAt: "上周",
+    tone: "slate",
+  },
 ];
 
-const EAGER_COUNT = 10;
+const toneClassName: Record<GuestbookNote["tone"], string> = {
+  sky: "from-sky-400/55",
+  lime: "from-lime-400/55",
+  rose: "from-rose-400/55",
+  violet: "from-violet-400/55",
+  amber: "from-amber-400/55",
+  slate: "from-slate-400/55",
+};
 
-function LazyTweetCard({ id, className }: { id: string; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+const tones: GuestbookNote["tone"][] = ["sky", "lime", "rose", "violet", "amber", "slate"];
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+function formatNoteTime(value: string) {
+  if (!value.includes("T")) return value;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "200px" }
-    );
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
 
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const diff = Date.now() - date.getTime();
+  const minute = 60 * 1000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
 
+  if (diff < minute) return "刚刚";
+  if (diff < hour) return `${Math.floor(diff / minute)} 分钟前`;
+  if (diff < day) return "今天";
+  if (diff < 2 * day) return "昨天";
+  if (diff < 7 * day) return `${Math.floor(diff / day)} 天前`;
+
+  return date.toLocaleDateString("zh-CN", {
+    month: "numeric",
+    day: "numeric",
+  });
+}
+
+function isGuestbookNote(note: unknown): note is GuestbookNote {
+  if (!note || typeof note !== "object") return false;
+
+  const maybeNote = note as Partial<GuestbookNote>;
   return (
-    <div ref={ref}>
-      {visible ? (
-        <ClientTweetCard id={id} className={className} />
-      ) : (
-        <TweetSkeleton />
-      )}
-    </div>
+    typeof maybeNote.id === "string" &&
+    typeof maybeNote.message === "string" &&
+    typeof maybeNote.author === "string" &&
+    typeof maybeNote.createdAt === "string" &&
+    tones.includes(maybeNote.tone as GuestbookNote["tone"])
+  );
+}
+
+async function fetchGuestbookNotes() {
+  const response = await fetch("/api/guestbook", { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error("Failed to load guestbook");
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data.notes)) return [];
+  return data.notes.filter(isGuestbookNote);
+}
+
+function GuestbookCard({ note }: { note: GuestbookNote }) {
+  return (
+    <article
+      className="relative flex h-[92px] w-[232px] shrink-0 flex-col justify-between overflow-hidden rounded-lg border border-border/55 bg-card/50 p-3 shadow-sm backdrop-blur-sm"
+    >
+      <div
+        aria-hidden
+        className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${toneClassName[note.tone]} via-foreground/10 to-transparent`}
+      />
+      <p className="line-clamp-2 text-[13px] leading-5 text-foreground/90">“{note.message}”</p>
+      <div className="flex items-center justify-between gap-3 pt-2 text-[10px] text-muted-foreground">
+        <span className="truncate">{note.author}</span>
+        <span className="shrink-0">{formatNoteTime(note.createdAt)}</span>
+      </div>
+    </article>
   );
 }
 
 export function TwitterTestimonials() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [message, setMessage] = useState("");
+  const [notes, setNotes] = useState<GuestbookNote[]>(starterNotes);
+  const [status, setStatus] = useState("");
+  const [isWriting, setIsWriting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchGuestbookNotes()
+      .then((remoteNotes) => {
+        if (!cancelled) {
+          setNotes(remoteNotes.length ? remoteNotes : starterNotes);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setStatus("数据库还没连上。");
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const marqueeNotes = useMemo(() => [...notes, ...notes], [notes]);
 
   const scroll = useCallback((direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = 340;
+      const scrollAmount = 320;
       scrollRef.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -112,65 +174,147 @@ export function TwitterTestimonials() {
     }
   }, []);
 
+  const submitNote = async () => {
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage) {
+      setStatus("先写点什么再贴上墙。");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setStatus("");
+
+    try {
+      const response = await fetch("/api/guestbook", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: trimmedMessage }),
+      });
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || !isGuestbookNote(data?.note)) {
+        throw new Error(data?.error || "Failed to save note");
+      }
+
+      setNotes((currentNotes) => [
+        data.note,
+        ...currentNotes.filter((note) => !note.id.startsWith("starter-")),
+      ]);
+      setMessage("");
+      setStatus("已贴上墙");
+      setIsWriting(false);
+    } catch {
+      setStatus("数据库还没连上。");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="w-full space-y-6 overflow-hidden">
-      <div className="flex items-center gap-3">
-        <svg
-          viewBox="0 0 24 24"
-          className="w-6 h-6"
-          fill="currentColor"
-        >
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-        </svg>
-        <h2 className="text-xl font-bold">Thanks for all of your love 💖</h2>
+    <div className="w-full space-y-3 overflow-hidden">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+            <MessageCircle className="size-3.5" />
+            留言簿
+          </div>
+          <h2 className="text-base font-semibold tracking-tight sm:text-lg">
+            这里收着一些路过的话。
+          </h2>
+        </div>
+        <p className="text-xs text-muted-foreground">匿名也可以，随便留一句。</p>
       </div>
 
+      {isWriting ? (
+        <div className="rounded-full border border-border/55 bg-card/45 p-1 shadow-sm backdrop-blur">
+          <div className="flex items-center gap-2">
+            <label className="sr-only" htmlFor="guestbook-message">留言</label>
+            <input
+              id="guestbook-message"
+              autoFocus
+              value={message}
+              disabled={isSubmitting}
+              maxLength={MAX_MESSAGE_LENGTH}
+              onChange={(event) => {
+                setMessage(event.target.value);
+                if (status) setStatus("");
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setIsWriting(false);
+                  setMessage("");
+                  return;
+                }
+
+                if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                  submitNote();
+                }
+              }}
+              placeholder="写一句话..."
+              className="h-8 min-w-0 flex-1 rounded-full bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground/65"
+            />
+            <span className="hidden text-[11px] text-muted-foreground sm:inline">
+              {message.length}/{MAX_MESSAGE_LENGTH}
+            </span>
+            <button
+              type="button"
+              onClick={submitNote}
+              disabled={isSubmitting}
+              className="inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full bg-foreground px-3 text-xs font-medium text-background transition hover:bg-foreground/90 sm:px-3.5"
+            >
+              <Send className="size-3.5" />
+              <span className="hidden sm:inline">{isSubmitting ? "保存中" : "贴上墙"}</span>
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              setIsWriting(true);
+              if (status) setStatus("");
+            }}
+            className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border/55 bg-card/45 px-3 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur transition hover:border-border hover:bg-card hover:text-foreground"
+          >
+            <Send className="size-3.5" />
+            写一句留言
+          </button>
+          {status ? <span className="text-[11px] text-muted-foreground">{status}</span> : null}
+        </div>
+      )}
+
       <div className="group relative">
-        {/* Left Arrow */}
         <button
           onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 backdrop-blur-sm border border-border shadow-lg hover:bg-background hover:scale-110 transition-all duration-300 opacity-0 group-hover:opacity-100"
+          className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-border bg-background/80 p-2 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-background group-hover:opacity-100"
           aria-label="Scroll left"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="size-5" />
         </button>
 
-        {/* Right Arrow */}
         <button
           onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 backdrop-blur-sm border border-border shadow-lg hover:bg-background hover:scale-110 transition-all duration-300 opacity-0 group-hover:opacity-100"
+          className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-border bg-background/80 p-2 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-background group-hover:opacity-100"
           aria-label="Scroll right"
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className="size-5" />
         </button>
 
-        {/* Scrollable container */}
-        <div 
+        <div
           ref={scrollRef}
           className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
         >
-          <div 
-            className="flex gap-4 hover:[animation-play-state:paused]"
+          <div
+            className="flex w-max gap-4 hover:[animation-play-state:paused]"
             style={{
-              animation: "scroll 180s linear infinite",
-              width: "max-content",
+              animation: "scroll 62s linear infinite",
             }}
           >
-            {/* First set */}
-            {tweetIds.map((id, idx) => (
-              <div key={`tweet-a-${idx}`} className="w-[320px] shrink-0 clean-tweet">
-                {idx < EAGER_COUNT ? (
-                  <ClientTweetCard id={id} className="shadow-none" />
-                ) : (
-                  <LazyTweetCard id={id} className="shadow-none" />
-                )}
-              </div>
-            ))}
-            {/* Duplicate for seamless loop */}
-            {tweetIds.map((id, idx) => (
-              <div key={`tweet-b-${idx}`} className="w-[320px] shrink-0 clean-tweet">
-                <LazyTweetCard id={id} className="shadow-none" />
-              </div>
+            {marqueeNotes.map((note, idx) => (
+              <GuestbookCard key={`${note.id}-${idx}`} note={note} />
             ))}
           </div>
         </div>

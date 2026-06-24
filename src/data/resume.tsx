@@ -1,7 +1,7 @@
 import { Icons } from "@/components/icons";
 import { HomeIcon, NotebookIcon, VideoIcon, FolderIcon, Settings, Wrench, Zap } from "lucide-react";
-import { faReact, faNodeJs, faGitAlt, faTypescript, faTailwindCss, faDocker, faFigma, faGithub, faFirefoxBrowser, faBrave, faNotion, faPython, faJava, faJs, faHtml5, faCss3Alt } from "@fortawesome/free-brands-svg-icons";
-import { faLeaf, faPlug, faBolt, faTerminal, faRocket, faServer, faDatabase, faCode } from "@fortawesome/free-solid-svg-icons";
+import { faReact, faNodeJs, faGitAlt, faTypescript, faTailwindCss, faDocker, faFigma, faGithub, faFirefoxBrowser, faBrave, faNotion, faPython, faJava, faJs, faHtml5 } from "@fortawesome/free-brands-svg-icons";
+import { faTerminal, faRocket, faServer } from "@fortawesome/free-solid-svg-icons";
 
 export const DATA = {
   name: "fangzekai",
@@ -14,7 +14,7 @@ export const DATA = {
   summary:
     "Currently working on AI application development. I love collaborating with new people on exciting projects.\n\nWhen I'm not coding, I'm usually playing Honor of Kings or hitting the gym.\n\nHere's my take on the [future of computer science](https://www.prasen.dev/blog/hello-world).\n\nBullish on AI and future technologies.",
 
-  avatarUrl: "/prasen.webp",
+  avatarUrl: "/zekai.webp",
   skills: [
     { name: "TypeScript", icon: faTypescript, category: "Languages" },
     { name: "JavaScript", icon: faJs, category: "Languages" },
@@ -22,14 +22,15 @@ export const DATA = {
     { name: "React", icon: faReact, category: "Frontend" },
     { name: "Next.js", customIcon: Icons.nextjs, category: "Frontend" },
     { name: "TailwindCSS", icon: faTailwindCss, category: "Frontend" },
-    { name: "Framer Motion", icon: faBolt, category: "Frontend" },
     { name: "Node.js", icon: faNodeJs, category: "Backend" },
-    { name: "MongoDB", icon: faLeaf, category: "Backend" },
-    { name: "PostgreSQL", icon: faDatabase, category: "Backend" },
-    { name: "Redis", icon: faDatabase, category: "Backend" },
+    { name: "MySQL", customIcon: Icons.mysql, category: "Backend" },
+    { name: "Redis", customIcon: Icons.redis, category: "Backend" },
+    { name: "RAG", customIcon: Icons.rag, category: "AI" },
+    { name: "Agent", customIcon: Icons.agent, category: "AI" },
     { name: "Git", icon: faGitAlt, category: "Tools" },
     { name: "Docker", icon: faDocker, category: "Tools" },
     { name: "Cursor", customIcon: Icons.cursor, category: "Tools" },
+    { name: "Codex", icon: faTerminal, category: "Tools" },
     { name: "Claude", customIcon: Icons.claude, category: "Tools" },
   ],
   setup: [
@@ -160,52 +161,40 @@ export const DATA = {
 
   work: [
     {
-      company: "smart huh :)",
+      company: "AI Travel Platform",
       href: "#",
-      badges: ["NDA"],
-      location: "",
-      title: "Frontend Developer",
-      logoUrl: "/company.png",
-      start: "December 2025",
-      end: "Present",
-      description:
-        "Gatekeeping this one because of NDA. Working on exciting stuff though!",
-      redacted: true,
-    },
-    {
-      company: "Stealth AI Startup",
-      href: "https://www.linkedin.com/company/stealthaistartup/",
-      badges: [],
-      location: "Remote",
+      badges: ["AI", "Agent"],
+      location: "Guangdong, China",
       title: "Full Stack Developer",
+      logoUrl: "/company.png",
+      start: "February 2026",
+      end: "June 2026",
+      description:
+        "Built parts of an AI Travel Agent platform that turns natural-language trip requests into executable itineraries, spanning the management dashboard, channel operations, business APIs, and the H5 user experience.",
+    },
+    {
+      company: "Cross-border E-commerce AI Startup",
+      href: "#",
+      badges: ["RAG", "LLM"],
+      location: "Remote",
+      title: "AI Application Developer Intern",
       logoUrl: "/stealth-ai.webp",
-      start: "August 2025",
-      end: "September 2025",
+      start: "January 2026",
+      end: "February 2026",
       description:
-        "Built and shipped features in a fast-paced startup environment. Worked on React frontend components, integrated REST APIs, and collaborated with cross-functional teams on product delivery.",
+        "Worked on a RAG pipeline for messy ERP exports, combining document parsing, vector search, keyword retrieval, and reranking so finance teams could query invoices, logistics, tax, and warehouse data more naturally.",
     },
     {
-      company: "Freelance",
-      href: "https://github.com/fzk888",
-      badges: [],
+      company: "Enterprise Fintech Software Company",
+      href: "#",
+      badges: ["NLU", "BERT"],
       location: "Remote",
-      title: "Frontend Developer",
+      title: "Algorithm Developer Intern",
       logoUrl: "/freelance.webp",
-      start: "2025",
-      end: "Present",
+      start: "July 2025",
+      end: "December 2025",
       description:
-        "Delivering web solutions for startups and small businesses. Building responsive UIs with React/Next.js, integrating third-party APIs, and deploying production-ready applications.",
-    },
-    {
-      company: "v0 by Vercel",
-      href: "https://github.com/fzk888",
-      badges: [],
-      location: "Remote",
-      title: "v0 Ambassador",
-      logoUrl: "/v0dev_logo.webp",
-      start: "2025",
-      end: "Present",
-      description: "Community ambassador for Vercel's AI-powered UI generation tool. Creating and sharing projects, helping developers adopt v0 for rapid prototyping.",
+        "Helped improve the NLU engine behind an intelligent language assistant, focusing on intent recognition, slot extraction, long-tail samples, similar-intent separation, and more reliable tool-calling flows.",
     },
   ],
   education: [

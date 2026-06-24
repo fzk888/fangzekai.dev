@@ -93,6 +93,92 @@ export const Icons = {
       <path d="M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23" />
     </svg>
   ),
+  mysql: (props: IconProps) => (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      className="size-8"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <title>MySQL</title>
+      <ellipse cx="12" cy="5" rx="7" ry="3" />
+      <path d="M5 5v10c0 1.66 3.13 3 7 3s7-1.34 7-3V5" />
+      <path d="M5 10c0 1.66 3.13 3 7 3s7-1.34 7-3" />
+      <path d="M14.5 18.7c1.2.9 2.7 1.3 4.5 1.3" />
+      <path d="M17.5 17.2c.6 1 1.4 1.9 2.5 2.8" />
+    </svg>
+  ),
+  redis: (props: IconProps) => (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      className="size-8"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <title>Redis</title>
+      <path d="M12 4 4 8l8 4 8-4-8-4Z" />
+      <path d="m4 12 8 4 8-4" />
+      <path d="m4 16 8 4 8-4" />
+    </svg>
+  ),
+  rag: (props: IconProps) => (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      className="size-8"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <title>RAG</title>
+      <path d="M6 4.5h8l4 4v11H6z" />
+      <path d="M14 4.5v4h4" />
+      <path d="M9 12h6" />
+      <path d="M9 15h4" />
+      <circle cx="16.5" cy="16.5" r="2.4" />
+      <path d="m18.2 18.2 1.8 1.8" />
+    </svg>
+  ),
+  agent: (props: IconProps) => (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      className="size-8"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <title>Agent</title>
+      <rect x="5" y="7" width="14" height="11" rx="3.5" />
+      <path d="M12 7V4" />
+      <path d="M9.5 12h.01" />
+      <path d="M14.5 12h.01" />
+      <path d="M9.5 15.5h5" />
+      <path d="M3 12h2" />
+      <path d="M19 12h2" />
+      <path d="M8 21h8" />
+    </svg>
+  ),
   nextjs: (props: IconProps) => (
     <svg
       role="img"
