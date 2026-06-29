@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { createPortal } from "react-dom";
 import GitHubCalendar from "react-github-calendar";
 import type { Activity } from "react-activity-calendar";
 import { useTheme } from "next-themes";
@@ -101,8 +102,8 @@ export function GithubContributions() {
     const w = el.offsetWidth;
     const h = el.offsetHeight;
     const margin = 8;
-    let left = tooltip.x - w / 2;
-    let top = tooltip.y - h - 6;
+    let left = tooltip.x + 14;
+    let top = tooltip.y - h - 12;
     left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
     if (top < margin) top = tooltip.y + 18; // not enough space above -> flip below
     setPos({ left, top });
@@ -115,14 +116,18 @@ export function GithubContributions() {
     (block: React.ReactElement, activity: Activity) => {
       return React.cloneElement(block, {
         onMouseEnter: (e: React.MouseEvent<SVGRectElement>) => {
-          const rect = e.currentTarget.getBoundingClientRect();
           setTooltip({
             date: activity.date,
             count: activity.count,
             level: activity.level,
-            x: rect.left + rect.width / 2,
-            y: rect.top,
+            x: e.clientX,
+            y: e.clientY,
           });
+        },
+        onMouseMove: (e: React.MouseEvent<SVGRectElement>) => {
+          setTooltip((prev) =>
+            prev ? { ...prev, x: e.clientX, y: e.clientY } : prev
+          );
         },
         onMouseLeave: () => setTooltip(null),
       } as React.SVGAttributes<SVGRectElement>);
@@ -162,6 +167,14 @@ export function GithubContributions() {
               theme={CALENDAR_THEME}
               renderBlock={renderBlock}
             />
+          </div>
+        )}
+
+        {/* Tooltip is portaled to <body> so it escapes any transformed ancestor
+            (framer-motion / overflow containers), keeping position:fixed aligned
+            with viewport coordinates (clientX/clientY). */}
+        {mounted &&
+          createPortal(
             <AnimatePresence>
               {tooltip && (
                 <motion.div
@@ -195,9 +208,9 @@ export function GithubContributions() {
                   )}
                 </motion.div>
               )}
-            </AnimatePresence>
-          </div>
-        )}
+            </AnimatePresence>,
+            document.body
+          )}
       </motion.div>
     </div>
   );
