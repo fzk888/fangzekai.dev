@@ -1,0 +1,35 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="720" fill="#08101a"/>
+  <rect x="70" y="70" width="1060" height="580" rx="30" fill="#0d1626" stroke="#1e3a5f" stroke-width="2"/>
+  <circle cx="900" cy="210" r="130" fill="#3b82f6" opacity=".16"/>
+  <circle cx="255" cy="492" r="190" fill="#06b6d4" opacity=".12"/>
+  <!-- plane icon -->
+  <g transform="translate(140,150) rotate(35)" fill="#60a5fa">
+    <path d="M0 40 L120 30 L150 20 L150 60 L120 50 L0 40 Z"/>
+    <path d="M70 25 L95 0 L95 30 Z"/>
+    <path d="M70 55 L95 90 L95 55 Z"/>
+  </g>
+  <!-- comparison chart frame -->
+  <rect x="180" y="180" width="840" height="300" rx="18" fill="#0a1320" stroke="#3b82f6" stroke-width="3"/>
+  <line x1="260" y1="430" x2="980" y2="430" stroke="#1e3a5f" stroke-width="2"/>
+  <!-- 4 platform bars -->
+  <g font-family="Arial, sans-serif" font-size="26" font-weight="700">
+    <text x="200" y="260" fill="#93c5fd">携程</text>
+    <rect x="270" y="240" width="420" height="32" rx="8" fill="#3b82f6"/>
+    <text x="700" y="265" fill="#bfdbfe">¥682</text>
+
+    <text x="200" y="312" fill="#93c5fd">飞猪</text>
+    <rect x="270" y="292" width="360" height="32" rx="8" fill="#60a5fa"/>
+    <text x="640" y="317" fill="#bfdbfe">¥595</text>
+
+    <text x="200" y="364" fill="#67e8f9">同程</text>
+    <rect x="270" y="344" width="300" height="32" rx="8" fill="#22d3ee"/>
+    <text x="580" y="369" fill="#a5f3fc">¥498</text>
+
+    <text x="200" y="416" fill="#67e8f9">去哪儿</text>
+    <rect x="270" y="396" width="340" height="32" rx="8" fill="#06b6d4"/>
+    <text x="620" y="421" fill="#a5f3fc">¥556</text>
+  </g>
+  <text x="100" y="565" fill="#f8fafc" font-family="Arial, sans-serif" font-size="76" font-weight="700">airticket-compare</text>
+  <text x="104" y="615" fill="#94a3b8" font-family="Arial, sans-serif" font-size="30">Multi-platform flight price comparison</text>
+</svg>

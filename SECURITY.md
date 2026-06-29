@@ -11,7 +11,7 @@
 We take the security of this portfolio website seriously. If you discover a security vulnerability, please follow these steps:
 
 1. **Do Not** create a public GitHub issue
-2. Email the vulnerability details to [prasenjitt4e@gmail.com](mailto:prasenjitt4e@gmail.com)
+2. Email the vulnerability details to [zekai_ai@163.com](mailto:zekai_ai@163.com)
 3. Include as much information as possible:
    - Type of vulnerability
    - Full path of source file(s)

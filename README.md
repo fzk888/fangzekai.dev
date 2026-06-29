@@ -267,6 +267,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-Your Name - [@Prasenjit](https://twitter.com/Star_Knight12)
+Fang Zekai - [@fzk888](https://github.com/fzk888)
 
-Project Link: [Try it here](https://prasen.dev)
+Project Link: [fangzekai.vercel.app](https://fangzekai.vercel.app)

@@ -12,7 +12,7 @@ export const DATA = {
   description:
     "",
   summary:
-    "Currently working on AI application development. I love collaborating with new people on exciting projects.\n\nWhen I'm not coding, I'm usually playing Honor of Kings or hitting the gym.\n\nHere's my take on the [future of computer science](https://www.prasen.dev/blog/hello-world).\n\nBullish on AI and future technologies.",
+    "Currently working on AI application development. I love collaborating with new people on exciting projects.\n\nWhen I'm not coding, I'm usually playing Honor of Kings or hitting the gym.\n\nHere's my take on the [future of computer science](https://fangzekai.vercel.app/blog/hello-world).\n\nBullish on AI and future technologies.",
 
   avatarUrl: "/zekai.webp",
   skills: [
@@ -161,16 +161,17 @@ export const DATA = {
 
   work: [
     {
-      company: "AI Travel Platform",
-      href: "#",
+      company: "RideClaw",
+      companyZh: "龙虾出行",
+      href: "https://rideclaw.ai/",
       badges: ["AI", "Agent"],
       location: "Guangdong, China",
       title: "Full Stack Developer",
-      logoUrl: "/company.png",
+      logoUrl: "/rideclaw.svg",
       start: "February 2026",
       end: "June 2026",
       description:
-        "Built parts of an AI Travel Agent platform that turns natural-language trip requests into executable itineraries, spanning the management dashboard, channel operations, business APIs, and the H5 user experience.",
+        "Full-stack development across an AI Travel Agent platform that turns natural-language trip requests into executable itineraries — built the management dashboard, channel-operations tooling, business APIs, and the H5 user experience end to end.",
     },
     {
       company: "Cross-border E-commerce AI Startup",
@@ -182,19 +183,20 @@ export const DATA = {
       start: "January 2026",
       end: "February 2026",
       description:
-        "Worked on a RAG pipeline for messy ERP exports, combining document parsing, vector search, keyword retrieval, and reranking so finance teams could query invoices, logistics, tax, and warehouse data more naturally.",
+        "Built a RAG pipeline so finance teams could query messy ERP exports — invoices, logistics, tax, and warehouse data — in natural language, combining document parsing with hybrid retrieval (vector + keyword) and reranking to lift answer accuracy on long-tail questions.",
     },
     {
-      company: "Enterprise Fintech Software Company",
-      href: "#",
+      company: "Client Service International, Inc.",
+      companyZh: "北京科蓝软件系统股份有限公司",
+      href: "http://www.csii.com.cn/",
       badges: ["NLU", "BERT"],
       location: "Remote",
       title: "Algorithm Developer Intern",
-      logoUrl: "/freelance.webp",
+      logoUrl: "/csii.png",
       start: "July 2025",
       end: "December 2025",
       description:
-        "Helped improve the NLU engine behind an intelligent language assistant, focusing on intent recognition, slot extraction, long-tail samples, similar-intent separation, and more reliable tool-calling flows.",
+        "Improved the NLU engine behind an intelligent language assistant — strengthened intent recognition and slot extraction, mined and labeled long-tail samples, separated confusable intents, and made tool-calling flows more reliable for real production traffic.",
     },
   ],
   education: [
@@ -232,26 +234,26 @@ export const DATA = {
       video: "",
     },
     {
-      title: "GraphRAG-Assistant",
-      href: "https://github.com/fzk888/GraphRAG-Assistant",
+      title: "xiaozhi-assistant",
+      href: "https://github.com/fzk888/xiaozhi-assistant",
       dates: "2025",
       active: true,
       description:
-        "基于 LangGraph 构建的 RAG 智能客服系统，通过图式工作流组织检索、推理和回答生成流程。",
+        "小智 ESP32 智能硬件 AI 后端服务，基于小智通信协议实现语音对话、唤醒词、OTA 升级等能力，对接自建大模型为硬件设备提供端到端交互。",
       technologies: [
         "Python",
-        "LangGraph",
-        "RAG",
+        "ESP32",
+        "IoT",
         "LLM",
       ],
       links: [
         {
           type: "Source",
-          href: "https://github.com/fzk888/GraphRAG-Assistant",
+          href: "https://github.com/fzk888/xiaozhi-assistant",
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "/projects/graphrag-assistant.svg",
+      image: "/projects/xiaozhi-assistant.svg",
       video: "",
     },
     {
@@ -301,6 +303,52 @@ export const DATA = {
       video: "",
     },
     {
+      title: "Watermark Lab",
+      href: "https://github.com/fzk888/watermark-lab",
+      dates: "2026",
+      active: true,
+      description:
+        "视频暗水印盲分析工具箱，支持盲水印检测、残差特征与频谱提取、弱化攻击（DCT/SVD/各向异性扩散）及相似度对比评分，提供统一 CLI 工具链。",
+      technologies: [
+        "Python",
+        "OpenCV",
+        "Steganography",
+        "DCT/SVD",
+      ],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/fzk888/watermark-lab",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/projects/watermark-lab.svg",
+      video: "",
+    },
+    {
+      title: "airticket-compare",
+      href: "https://github.com/fzk888/airticket-compare",
+      dates: "2026",
+      active: true,
+      description:
+        "机票比价 Skill，并发爬取携程、飞猪、同程、去哪儿四平台实时价格，支持直飞/中转筛选与航班号查询，生成价格对比图表，可作为 Agent 技能集成。",
+      technologies: [
+        "Python",
+        "Playwright",
+        "Asyncio",
+        "Data Visualization",
+      ],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/fzk888/airticket-compare",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/projects/airticket-compare.svg",
+      video: "",
+    },
+    {
       title: "CB-Settlement",
       href: "https://github.com/fzk888/CB-Settlement",
       dates: "2026",
@@ -322,30 +370,30 @@ export const DATA = {
       ],
       image: "/projects/cb-settlement.svg",
       video: "",
-    }
-  ],
-  hackathons: [
-    {
-      title: "Smart India Hackathon 2022",
-      dates: "March 23rd - 25th, 2022",
-      location: "Bhubaneswar, India",
-      description:
-        "Built 'EducationX' - an e-learning portal with free and premium educational content. Implemented user authentication, course management, and payment integration.",
-      image:
-        "/smart-india-hackathon.webp",
-      mlh: "https://github.com/Synchrotek/E-LearningX",
-      links: [],
     },
     {
-      title: "Smart India Hackathon 2023",
-      dates: "December 19th - 23rd, 2023",
-      location: "Bhubaneswar, India",
+      title: "GraphRAG-Assistant",
+      href: "https://github.com/fzk888/GraphRAG-Assistant",
+      dates: "2025",
+      active: true,
       description:
-        "Built 'NexusLink' - a real-time collaborative coding platform with multi-user editing, integrated chat, and project management features using WebSockets.",
-      image:
-        "/logo.webp",
-      mlh: "https://nexuslink01v.netlify.app/",
-      links: [],
+        "基于 LangGraph 构建的 RAG 智能客服系统，通过图式工作流组织检索、推理和回答生成流程。",
+      technologies: [
+        "Python",
+        "LangGraph",
+        "RAG",
+        "LLM",
+      ],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/fzk888/GraphRAG-Assistant",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/projects/graphrag-assistant.svg",
+      video: "",
     },
   ],
+  hackathons: [],
 } as const;

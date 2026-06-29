@@ -1,0 +1,29 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="720" fill="#0d0a16"/>
+  <rect x="70" y="70" width="1060" height="580" rx="30" fill="#15101f" stroke="#2c2440" stroke-width="2"/>
+  <circle cx="900" cy="210" r="130" fill="#a855f7" opacity=".16"/>
+  <circle cx="255" cy="492" r="190" fill="#6366f1" opacity=".14"/>
+  <!-- ESP32 chip body -->
+  <rect x="250" y="220" width="200" height="200" rx="18" fill="#1a1530" stroke="#a855f7" stroke-width="3"/>
+  <rect x="300" y="270" width="100" height="100" rx="10" fill="#241a3d" stroke="#c084fc" stroke-width="2"/>
+  <text x="350" y="328" fill="#e9d5ff" font-family="Arial, sans-serif" font-size="30" font-weight="700" text-anchor="middle">ESP32</text>
+  <!-- chip pins -->
+  <g fill="#a855f7">
+    <rect x="222" y="245" width="28" height="10" rx="3"/><rect x="222" y="280" width="28" height="10" rx="3"/><rect x="222" y="315" width="28" height="10" rx="3"/><rect x="222" y="350" width="28" height="10" rx="3"/><rect x="222" y="385" width="28" height="10" rx="3"/>
+    <rect x="450" y="245" width="28" height="10" rx="3"/><rect x="450" y="280" width="28" height="10" rx="3"/><rect x="450" y="315" width="28" height="10" rx="3"/><rect x="450" y="350" width="28" height="10" rx="3"/><rect x="450" y="385" width="28" height="10" rx="3"/>
+  </g>
+  <!-- sound waves connecting to AI -->
+  <g fill="none" stroke="#c084fc" stroke-width="5" stroke-linecap="round">
+    <path d="M540 270q60 20 0 40q-60 20 0 40"/>
+    <path d="M580 320q80 0 0 0"/>
+  </g>
+  <!-- AI speech bubble -->
+  <rect x="680" y="195" width="280" height="290" rx="22" fill="#1a1530" stroke="#a855f7" stroke-width="3"/>
+  <circle cx="760" cy="265" r="16" fill="#a855f7"/>
+  <g fill="none" stroke="#e9d5ff" stroke-width="5" stroke-linecap="round">
+    <path d="M800 255q30 10 0 20"/>
+    <path d="M720 320h180M720 365h130M750 410h120"/>
+  </g>
+  <text x="100" y="565" fill="#f8fafc" font-family="Arial, sans-serif" font-size="76" font-weight="700">xiaozhi-assistant</text>
+  <text x="104" y="615" fill="#94a3b8" font-family="Arial, sans-serif" font-size="30">ESP32 AI voice assistant backend</text>
+</svg>
