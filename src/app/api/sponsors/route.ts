@@ -15,14 +15,12 @@ export async function GET() {
     const token = process.env.GITHUB_TOKEN;
     
     if (!token) {
-      console.error('❌ GITHUB_TOKEN is not set in .env.local');
-      return NextResponse.json({ 
-        sponsors: [], 
-        error: 'GITHUB_TOKEN not configured' 
+      console.error('GITHUB_TOKEN is not set in environment variables');
+      return NextResponse.json({
+        sponsors: [],
+        error: 'GITHUB_TOKEN not configured'
       });
     }
-
-    console.log('✅ GITHUB_TOKEN found, fetching sponsors...');
 
     const query = `
       query {
@@ -69,46 +67,37 @@ export async function GET() {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ GitHub API error:', response.status, errorText);
-      return NextResponse.json({ 
-        sponsors: [], 
-        error: `GitHub API error: ${response.status}` 
+      console.error('GitHub API error:', response.status);
+      return NextResponse.json({
+        sponsors: [],
+        error: `GitHub API error: ${response.status}`
       });
     }
 
     const data = await response.json();
-    
-    console.log('📦 Raw GitHub API response:', JSON.stringify(data, null, 2));
-    
+
     // Check if we have fatal errors (not just tier permission errors)
     if (data.errors) {
       // Check if errors are only about tier field (which we can ignore)
-      const hasFatalError = data.errors.some((error: any) => 
+      const hasFatalError = data.errors.some((error: any) =>
         !error.path?.includes('tier')
       );
-      
+
       if (hasFatalError) {
-        console.error('❌ GitHub GraphQL fatal errors:', JSON.stringify(data.errors, null, 2));
-        return NextResponse.json({ 
-          sponsors: [], 
+        console.error('GitHub GraphQL fatal errors:', data.errors);
+        return NextResponse.json({
+          sponsors: [],
           error: 'GraphQL query failed',
-          details: data.errors 
+          details: data.errors
         });
-      } else {
-        console.log('⚠️  Non-fatal error (tier field forbidden) - continuing anyway');
       }
     }
 
     const viewer = data.data?.viewer;
-    console.log('👤 GitHub user:', viewer?.login);
-    
+
     const sponsorships = viewer?.sponsorshipsAsMaintainer?.nodes || [];
     const totalCount = viewer?.sponsorshipsAsMaintainer?.totalCount || 0;
-    
-    console.log(`💖 Total sponsors found: ${totalCount}`);
-    console.log(`📋 Sponsorships data:`, JSON.stringify(sponsorships, null, 2));
-    
+
     const sponsors: Sponsor[] = sponsorships
       .filter((node: any) => node?.sponsorEntity)
       .map((node: any) => {
@@ -119,21 +108,13 @@ export async function GET() {
           url: node.sponsorEntity.url,
           isOneTime: node.tier?.isOneTime || false,
         };
-        console.log('✨ Processed sponsor:', sponsor);
         return sponsor;
       });
 
-    console.log(`✅ Returning ${sponsors.length} sponsors`);
-
     return NextResponse.json(
-      { 
+      {
         sponsors,
         totalCount,
-        debug: {
-          hasToken: !!token,
-          viewerLogin: viewer?.login,
-          rawSponsorsCount: sponsorships.length
-        }
       },
       {
         headers: {
@@ -142,10 +123,10 @@ export async function GET() {
       }
     );
   } catch (error) {
-    console.error('❌ Error fetching sponsors:', error);
-    return NextResponse.json({ 
-      sponsors: [], 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    console.error('Error fetching sponsors:', error);
+    return NextResponse.json({
+      sponsors: [],
+      error: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }

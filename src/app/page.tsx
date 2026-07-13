@@ -283,13 +283,7 @@ export default function Page() {
             <BlurFade delay={BLUR_FADE_DELAY * 11.5}>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {DATA.projects
-                  .filter((project) => 
-                    ["Doc_QA", "GraphRAG-Assistant", "VehicleDetection_YOLOv12"].includes(project.title)
-                  )
-                  .sort((a, b) => {
-                    const order = ["Doc_QA", "GraphRAG-Assistant", "VehicleDetection_YOLOv12"];
-                    return order.indexOf(a.title) - order.indexOf(b.title);
-                  })
+                  .slice(0, 3)
                   .map((project) => (
                     <div key={project.title} className="relative overflow-hidden rounded-xl">
                       <ProjectCard
@@ -332,6 +326,7 @@ export default function Page() {
                     logoUrl={work.logoUrl}
                     altText={work.company}
                     title={work.company}
+                    titleZh={(work as any).companyZh}
                     subtitle={work.title}
                     href={work.href}
                     badges={work.badges}
