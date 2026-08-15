@@ -22,7 +22,7 @@ This is a personal portfolio/blog site built with Next.js 14 (App Router), TypeS
 
 ### Content System
 
-Blog posts live in `content/*.mdx` with gray-matter frontmatter (title, publishedAt, summary, tags). The MDX pipeline is in `src/data/blog.ts` — it uses unified/remark/rehype with rehype-pretty-code (shiki) for syntax highlighting. Posts are read from the filesystem at build time.
+Blog posts live in `content/*.md` (with legacy `.mdx` compatibility) using gray-matter frontmatter: title, publishedAt, summary, and tags. The Markdown pipeline is in `src/data/blog.ts` — it uses unified/remark/rehype with rehype-pretty-code (shiki) for syntax highlighting. Posts are read from the filesystem at build time.
 
 ### Data and Configuration
 
@@ -46,10 +46,11 @@ Blog posts live in `content/*.mdx` with gray-matter frontmatter (title, publishe
 
 ## Adding Content
 
-New blog post: create `content/<slug>.mdx` with frontmatter:
+New blog post: create `content/<slug>.md` with frontmatter:
 ```yaml
 ---
 title: "Post Title"
+slug: "post-url-slug"
 publishedAt: "2024-01-01"
 summary: "Brief description"
 ---

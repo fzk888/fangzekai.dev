@@ -7,6 +7,13 @@ import { GadgetSkeleton } from "@/components/skeletons/gadget-skeleton";
 import { Cpu, Smartphone, Headphones, Wrench, ArrowUpRight } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GadgetsFilter } from '@/components/gadgets/gadgets-filter';
+import {
+  GadgetCategoryLabel,
+  GadgetItemCount,
+  GadgetsHeader,
+  GadgetToolsHeader,
+  Localized,
+} from "@/components/i18n-content";
 
 export const metadata = {
   title: "Gadgets",
@@ -48,9 +55,11 @@ export default function GadgetsPage() {
                   <CategoryIcon className="size-5 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold">{category}</h2>
+                  <h2 className="text-2xl font-bold">
+                    <GadgetCategoryLabel category={category} />
+                  </h2>
                   <p className="text-sm text-muted-foreground">
-                    {categoryProducts.length} {categoryProducts.length === 1 ? 'item' : 'items'}
+                    <GadgetItemCount count={categoryProducts.length} />
                   </p>
                 </div>
               </div>
@@ -76,10 +85,7 @@ export default function GadgetsPage() {
           <Wrench className="size-5 text-primary" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold">Tools & Software</h2>
-          <p className="text-sm text-muted-foreground">
-            Apps and software I use to code and stay productive.
-          </p>
+          <GadgetToolsHeader />
         </div>
       </div>
 
@@ -104,7 +110,7 @@ export default function GadgetsPage() {
                   {tool.name}
                 </h3>
                 <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-                  {tool.description}
+                  <Localized value={tool.description} />
                 </p>
               </div>
               <ArrowUpRight className="size-4 shrink-0 mt-0.5 text-muted-foreground/40 group-hover:text-foreground transition-colors" />
@@ -119,12 +125,7 @@ export default function GadgetsPage() {
     <main className="container max-w-5xl mx-auto px-4 py-12">
       <Suspense fallback={<GadgetSkeleton />}>
         <BlurFade>
-          <div className="max-w-3xl mx-auto mb-12 text-center space-y-4">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">My Tech Setup</h1>
-            <p className="text-muted-foreground text-lg leading-relaxed">
-              Products I personally use and recommend. Buying through my affiliate links helps support my work.
-            </p>
-          </div>
+          <GadgetsHeader />
         </BlurFade>
 
         <GadgetsFilter

@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Monitor, Wrench } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 
 const tabs = [
-  { id: "hardware", label: "Hardware", icon: Monitor },
-  { id: "software", label: "Software", icon: Wrench },
+  { id: "hardware", icon: Monitor },
+  { id: "software", icon: Wrench },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -18,6 +19,7 @@ export function GadgetsFilter({
   hardware: React.ReactNode;
   software: React.ReactNode;
 }) {
+  const { t } = useLanguage();
   const [active, setActive] = useState<TabId>("hardware");
 
   return (
@@ -41,7 +43,9 @@ export function GadgetsFilter({
               )}
               <span className={`relative z-10 flex items-center gap-2 transition-colors ${active === tab.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
                 <tab.icon className="size-4" />
-                {tab.label}
+                {tab.id === "hardware"
+                  ? t.pages.gadgets.hardware
+                  : t.pages.gadgets.software}
               </span>
             </button>
           ))}

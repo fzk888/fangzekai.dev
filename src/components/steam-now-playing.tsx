@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Icons } from "@/components/icons";
 import { Gamepad2, Trophy, Clock } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 
 interface SteamData {
   name: string;
@@ -23,6 +24,7 @@ interface SteamData {
 }
 
 export function SteamNowPlaying() {
+  const { locale, t } = useLanguage();
   const [data, setData] = useState<SteamData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -110,17 +112,17 @@ export function SteamNowPlaying() {
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
                 </span>
-                In Game
+                {t.steam.inGame}
               </span>
             ) : data.personastate >= 1 ? (
               <span className="inline-flex items-center gap-1 shrink-0 rounded-full bg-emerald-500/10 px-1.5 py-0.5 text-[9px] uppercase tracking-wider font-semibold text-emerald-500">
                 <span className="size-1.5 rounded-full bg-emerald-500" />
-                Online
+                {t.steam.online}
               </span>
             ) : (
               <span className="inline-flex items-center gap-1 shrink-0 rounded-full bg-red-500/10 px-1.5 py-0.5 text-[9px] uppercase tracking-wider font-semibold text-red-500">
                 <span className="size-1.5 rounded-full bg-red-500" />
-                Offline
+                {t.steam.offline}
               </span>
             )}
           </div>
@@ -131,7 +133,7 @@ export function SteamNowPlaying() {
               {gameName}
             </p>
             {!isPlaying && (
-              <p className="text-[10px] text-muted-foreground/50">(last played)</p>
+              <p className="text-[10px] text-muted-foreground/50">({t.steam.lastPlayed})</p>
             )}
           </div>
 
@@ -139,16 +141,21 @@ export function SteamNowPlaying() {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
               <Trophy className="size-3" />
-              <span>Lvl {data.level}</span>
+              <span>{t.steam.level.replace("{count}", String(data.level))}</span>
             </div>
             <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
               <Gamepad2 className="size-3" />
-              <span>{data.gamesCount} games</span>
+              <span>
+                {t.steam.games.replace(
+                  "{count}",
+                  data.gamesCount.toLocaleString(locale === "zh" ? "zh-CN" : "en-US")
+                )}
+              </span>
             </div>
             {!isPlaying && hoursPlayed !== null && hoursPlayed > 0 && (
               <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
                 <Clock className="size-3" />
-                <span>{hoursPlayed}h</span>
+                <span>{t.steam.hours.replace("{count}", String(hoursPlayed))}</span>
               </div>
             )}
           </div>

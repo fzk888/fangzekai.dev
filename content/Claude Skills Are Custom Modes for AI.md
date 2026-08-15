@@ -1,5 +1,6 @@
 ---
 title: "Claude Skills Are Basically Custom Modes for AI. And They're Sick"
+slug: "claude-skills"
 publishedAt: "2026-01-10"
 summary: "Anthropic just dropped Skills for Claude. Think of them as reusable instruction packs that make Claude way better at specific tasks."
 tags: ["ai", "claude", "skills", "productivity"]

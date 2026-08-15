@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { DATA } from '@/data/resume';
 import { motion } from 'framer-motion';
 import { JetBrains_Mono } from 'next/font/google';
@@ -8,6 +8,9 @@ import { useTheme } from 'next-themes';
 import { Copy, X, Minus, Maximize2, Monitor, SunIcon, MoonIcon, ArrowLeft } from 'lucide-react';
 import { Button } from './ui/button';
 import ShinyButton from './ui/shiny-button';
+import { useLanguage } from "@/components/language-provider";
+import { localize, type Locale } from "@/i18n/config";
+import type { Translations } from "@/i18n/en";
 
 const jetbrainsMono = JetBrains_Mono({ 
   subsets: ['latin'],
@@ -53,37 +56,29 @@ const ALIASES = {
   t: 'theme',
 };
 
-const COMMANDS = {
-  help: 'Available commands:\n\n' +
-    'help     (h, ?)  - Show this help message\n' +
-    'about    (a)     - Display information about me\n' +
-    'skills   (s)     - List my technical skills\n' +
-    'projects (p, ls) - List my projects\n' +
-    'edu             - Show my education\n' +
-    'contact   (c)    - Display contact information\n' +
-    'social          - Show social media links\n' +
-    'version  (v)    - Show CLI version\n' +
-    'clear          - Clear the terminal\n' +
-    'gui      (g)    - Switch to GUI mode\n\n' +
-    'Tip: Use Tab for command completion and ↑↓ for command history',
-  about: () => `${DATA.name}\n${DATA.description}\n\n${DATA.summary}`,
-  skills: () => `Skills:\n${DATA.skills.join(', ')}`,
+function createCommands(locale: Locale, t: Translations) {
+  return {
+  help: t.cli.help,
+  about: () =>
+    `${localize(DATA.displayName, locale) ?? DATA.name}\n\n${t.resume.summary}`,
+  skills: () => `${t.cli.skills}:\n${DATA.skills.map((skill) => skill.name).join(', ')}`,
   projects: () => DATA.projects.map(project => 
-    `\n${project.title}\n${project.description}\nTech: ${project.technologies.join(', ')}\n`
+    `\n${project.title}\n${localize(project.description, locale)}\n${t.cli.tech}: ${project.technologies.join(', ')}\n`
   ).join('\n'),
   edu: () => DATA.education.map(edu => 
-    `\n${edu.school} - ${edu.degree}\n${edu.start} - ${edu.end}\n`
+    `\n${localize(edu.school, locale)} - ${localize(edu.degree, locale)}\n${localize(edu.period, locale)}\n`
   ).join('\n'),
-  contact: () => `Email: ${DATA.contact.email}`,
+  contact: () => `${t.cli.email}: ${DATA.contact.email}`,
   social: () => Object.entries(DATA.contact.social)
     .map(([platform, data]) => `${platform}: ${data.url}`)
     .join('\n'),
   version: () => 'fangzekai.dev CLI v1.0.0',
   clear: 'CLEAR',
   gui: 'GUI',
+  };
 };
 
-type CommandType = keyof typeof COMMANDS;
+type CommandType = keyof ReturnType<typeof createCommands>;
 
 function makeLinksClickable(text: string) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -122,6 +117,7 @@ function formatCommandLine(line: string, currentTheme: string | undefined) {
 }
 
 export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: CliInterfaceProps) {
+  const { locale, t } = useLanguage();
   const [input, setInput] = useState('');
   const [isMobile, setIsMobile] = useState(false);
   const [output, setOutput] = useState<string[]>([]);
@@ -132,6 +128,7 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
   const { setTheme } = useTheme();
+  const commands = useMemo(() => createCommands(locale, t), [locale, t]);
 
   // Force dark theme
   useEffect(() => {
@@ -148,8 +145,8 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
     
     setIsMounted(true);
     setOutput([
-      isMobile ? 'Welcome to fangzekai.dev CLI! 👋' : ASCII_ART + '\nWelcome to my portfolio CLI! 👋',
-      'Type "help" or "?" to see available commands.',
+      isMobile ? t.cli.welcomeMobile : ASCII_ART + `\n${t.cli.welcome}`,
+      t.cli.helpHint,
       ''
     ]);
 
@@ -157,7 +154,7 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
       window.removeEventListener('resize', checkMobile);
       setIsMounted(false);
     };
-  }, [isMobile]);
+  }, [isMobile, t.cli.helpHint, t.cli.welcome, t.cli.welcomeMobile]);
 
   // Scroll to bottom when output changes
   useEffect(() => {
@@ -177,21 +174,26 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
     }
 
     if (resolvedCmd === 'gui') {
-      setOutput(prev => [...prev, `$ ${cmd}`, 'Switching to GUI mode...', '']);
+      setOutput(prev => [...prev, `$ ${cmd}`, t.cli.switching, '']);
       setTimeout(onGuiCommand, 500);
       return;
     }
 
     if (resolvedCmd === 'theme' || resolvedCmd === 't') {
       setTheme('dark');
-      setOutput(prev => [...prev, `$ ${cmd}`, 'Terminal is always in dark theme', '']);
+      setOutput(prev => [...prev, `$ ${cmd}`, t.cli.darkOnly, '']);
       return;
     }
 
-    const result = COMMANDS[resolvedCmd as CommandType];
+    const result = commands[resolvedCmd as CommandType];
     
     if (!result) {
-      setOutput(prev => [...prev, `$ ${cmd}`, `Command not found: ${cmd}. Type "help" for available commands.`, '']);
+      setOutput(prev => [
+        ...prev,
+        `$ ${cmd}`,
+        t.cli.notFound.replace("{command}", cmd),
+        "",
+      ]);
       return;
     }
 
@@ -229,7 +231,7 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
       }
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      const availableCommands = [...Object.keys(COMMANDS), ...Object.keys(ALIASES)];
+      const availableCommands = [...Object.keys(commands), ...Object.keys(ALIASES)];
       const matches = availableCommands.filter(cmd => cmd.startsWith(input.toLowerCase()));
       if (matches.length === 1) {
         setInput(matches[0]);
@@ -244,7 +246,7 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
       const button = document.activeElement as HTMLButtonElement;
       if (button) {
         const originalText = button.innerHTML;
-        button.innerHTML = 'Copied!';
+        button.innerHTML = t.cli.copied;
         setTimeout(() => {
           button.innerHTML = originalText;
         }, 1000);
@@ -272,10 +274,10 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
             hover:border-zinc-700/50 hover:bg-zinc-800/50
             [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05)]
             hover:[box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_0_12px_rgba(255,255,255,.1)]"
-          title="Back to GUI"
+          title={t.cli.backToGui}
         >
           <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
-          <span className="hidden md:inline text-sm font-medium">Back</span>
+          <span className="hidden md:inline text-sm font-medium">{t.common.back}</span>
         </button>
       </div>
 
@@ -305,7 +307,7 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
                 <button
                   onClick={() => copyToClipboard(line)}
                   className="absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                  title="Copy to clipboard"
+                  title={t.cli.copy}
                 >
                   <Copy className="h-4 w-4" />
                 </button>
@@ -338,4 +340,4 @@ export function CliInterface({ onGuiCommand, onMinimize, onMaximize, onClose }: 
       </div>
     </motion.div>
   );
-} 
+}

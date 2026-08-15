@@ -26,6 +26,7 @@ import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { useSoundSettings } from "@/components/sound-provider";
 import { playSound } from "@/hooks/use-sound";
+import { useLanguage } from "@/components/language-provider";
 
 interface Command {
   id: string;
@@ -45,6 +46,7 @@ export function CommandPalette() {
   const router = useRouter();
   const { setTheme, theme } = useTheme();
   const { enabled: soundEnabled, setEnabled: setSoundEnabled } = useSoundSettings();
+  const { t } = useLanguage();
   const selectedButtonRef = React.useRef<HTMLButtonElement>(null);
 
   // Handle keyboard shortcuts to open palette
@@ -93,207 +95,211 @@ export function CommandPalette() {
     // Navigation - Pages
     {
       id: "home",
-      label: "Home",
-      description: "Go to homepage",
+      label: t.commandPalette.commands.home[0],
+      description: t.commandPalette.commands.home[1],
       icon: <HomeIcon className="size-4" />,
       action: () => {
         setOpen(false);
         router.push("/");
       },
       keywords: ["home", "main", "index"],
-      group: "Pages",
+      group: t.commandPalette.groups.pages,
     },
     {
       id: "blog",
-      label: "Blog",
-      description: "View all blog posts",
+      label: t.commandPalette.commands.blog[0],
+      description: t.commandPalette.commands.blog[1],
       icon: <NotebookIcon className="size-4" />,
       action: () => {
         setOpen(false);
         router.push("/blog");
       },
       keywords: ["blog", "posts", "articles", "writing"],
-      group: "Pages",
+      group: t.commandPalette.groups.pages,
     },
     {
       id: "videos",
-      label: "Videos",
-      description: "Watch video tutorials",
+      label: t.commandPalette.commands.videos[0],
+      description: t.commandPalette.commands.videos[1],
       icon: <VideoIcon className="size-4" />,
       action: () => {
         setOpen(false);
         router.push("/videos");
       },
       keywords: ["videos", "youtube", "tutorials"],
-      group: "Pages",
+      group: t.commandPalette.groups.pages,
     },
     {
       id: "projects",
-      label: "Projects",
-      description: "View all projects",
+      label: t.commandPalette.commands.projects[0],
+      description: t.commandPalette.commands.projects[1],
       icon: <FolderIcon className="size-4" />,
       action: () => {
         setOpen(false);
         router.push("/projects");
       },
       keywords: ["projects", "work", "portfolio"],
-      group: "Pages",
+      group: t.commandPalette.groups.pages,
     },
     {
       id: "gadgets",
-      label: "Gadgets",
-      description: "View my gadgets",
+      label: t.commandPalette.commands.gadgets[0],
+      description: t.commandPalette.commands.gadgets[1],
       icon: <Icons.shop className="size-4" />,
       action: () => {
         setOpen(false);
         router.push("/gadgets");
       },
       keywords: ["gadgets", "gear", "setup", "tools"],
-      group: "Pages",
+      group: t.commandPalette.groups.pages,
     },
     // Navigation - Sections
     {
       id: "about",
-      label: "About",
-      description: "Jump to about section",
+      label: t.commandPalette.commands.about[0],
+      description: t.commandPalette.commands.about[1],
       icon: <HashIcon className="size-4" />,
       action: () => navigateToSection("about"),
       keywords: ["about", "bio", "info"],
-      group: "Sections",
+      group: t.commandPalette.groups.sections,
     },
     {
       id: "skills",
-      label: "Skills",
-      description: "Jump to skills section",
+      label: t.commandPalette.commands.skills[0],
+      description: t.commandPalette.commands.skills[1],
       icon: <HashIcon className="size-4" />,
       action: () => navigateToSection("skills"),
       keywords: ["skills", "tech", "stack"],
-      group: "Sections",
+      group: t.commandPalette.groups.sections,
     },
     {
       id: "work",
-      label: "Work Experience",
-      description: "Jump to work section",
+      label: t.commandPalette.commands.work[0],
+      description: t.commandPalette.commands.work[1],
       icon: <HashIcon className="size-4" />,
       action: () => navigateToSection("work"),
       keywords: ["work", "experience", "job", "career"],
-      group: "Sections",
+      group: t.commandPalette.groups.sections,
     },
     {
       id: "contributions",
-      label: "GitHub Contributions",
-      description: "Jump to contributions",
+      label: t.commandPalette.commands.contributions[0],
+      description: t.commandPalette.commands.contributions[1],
       icon: <HashIcon className="size-4" />,
       action: () => navigateToSection("contributions"),
       keywords: ["github", "contributions", "activity"],
-      group: "Sections",
+      group: t.commandPalette.groups.sections,
     },
     {
       id: "contact",
-      label: "Contact",
-      description: "Jump to contact section",
+      label: t.commandPalette.commands.contact[0],
+      description: t.commandPalette.commands.contact[1],
       icon: <HashIcon className="size-4" />,
       action: () => navigateToSection("contact"),
       keywords: ["contact", "email", "reach"],
-      group: "Sections",
+      group: t.commandPalette.groups.sections,
     },
     // Theme
     {
       id: "theme-light",
-      label: "Light Theme",
-      description: "Switch to light mode",
+      label: t.commandPalette.commands.light[0],
+      description: t.commandPalette.commands.light[1],
       icon: <SunIcon className="size-4" />,
       action: () => {
         setTheme("light");
         setOpen(false);
       },
       keywords: ["light", "theme", "bright"],
-      group: "Theme",
+      group: t.commandPalette.groups.theme,
     },
     {
       id: "theme-dark",
-      label: "Dark Theme",
-      description: "Switch to dark mode",
+      label: t.commandPalette.commands.dark[0],
+      description: t.commandPalette.commands.dark[1],
       icon: <MoonIcon className="size-4" />,
       action: () => {
         setTheme("dark");
         setOpen(false);
       },
       keywords: ["dark", "theme", "night"],
-      group: "Theme",
+      group: t.commandPalette.groups.theme,
     },
     {
       id: "theme-system",
-      label: "System Theme",
-      description: "Use system preference",
+      label: t.commandPalette.commands.system[0],
+      description: t.commandPalette.commands.system[1],
       icon: <MonitorIcon className="size-4" />,
       action: () => {
         setTheme("system");
         setOpen(false);
       },
       keywords: ["system", "theme", "auto"],
-      group: "Theme",
+      group: t.commandPalette.groups.theme,
     },
     // Settings
     {
       id: "toggle-sound",
-      label: soundEnabled ? "Disable Sound Effects" : "Enable Sound Effects",
-      description: soundEnabled ? "Turn off UI sounds" : "Turn on UI sounds",
+      label: soundEnabled
+        ? t.commandPalette.commands.soundOff[0]
+        : t.commandPalette.commands.soundOn[0],
+      description: soundEnabled
+        ? t.commandPalette.commands.soundOff[1]
+        : t.commandPalette.commands.soundOn[1],
       icon: soundEnabled ? <Volume2Icon className="size-4" /> : <VolumeXIcon className="size-4" />,
       action: () => {
         setSoundEnabled(!soundEnabled);
         setOpen(false);
       },
       keywords: ["sound", "audio", "mute", "effects", "sfx"],
-      group: "Settings",
+      group: t.commandPalette.groups.settings,
     },
     // Quick Actions
     {
       id: "copy-email",
-      label: "Copy Email",
-      description: "zekai_ai@163.com",
+      label: t.commandPalette.commands.copyEmail[0],
+      description: t.commandPalette.commands.copyEmail[1],
       icon: copied ? <CheckIcon className="size-4" /> : <CopyIcon className="size-4" />,
       action: () => copyToClipboard("zekai_ai@163.com"),
       keywords: ["copy", "email", "contact"],
-      group: "Actions",
+      group: t.commandPalette.groups.actions,
     },
     {
       id: "github",
-      label: "Open GitHub",
-      description: "Visit GitHub profile",
+      label: t.commandPalette.commands.github[0],
+      description: t.commandPalette.commands.github[1],
       icon: <GithubIcon className="size-4" />,
       action: () => {
         window.open("https://github.com/fzk888", "_blank");
         setOpen(false);
       },
       keywords: ["github", "profile", "code"],
-      group: "Social",
+      group: t.commandPalette.groups.social,
     },
     {
       id: "linkedin",
-      label: "Open LinkedIn",
-      description: "Visit LinkedIn profile",
+      label: t.commandPalette.commands.linkedin[0],
+      description: t.commandPalette.commands.linkedin[1],
       icon: <LinkedinIcon className="size-4" />,
       action: () => {
         window.open("", "_blank");
         setOpen(false);
       },
       keywords: ["linkedin", "profile", "professional"],
-      group: "Social",
+      group: t.commandPalette.groups.social,
     },
     {
       id: "x",
-      label: "Open X (Twitter)",
-      description: "Visit X profile",
+      label: t.commandPalette.commands.x[0],
+      description: t.commandPalette.commands.x[1],
       icon: <Icons.x className="size-4" />,
       action: () => {
         window.open("", "_blank");
         setOpen(false);
       },
       keywords: ["x", "twitter", "social"],
-      group: "Social",
+      group: t.commandPalette.groups.social,
     },
-  ], [copied, router, setTheme, navigateToSection, copyToClipboard, soundEnabled, setSoundEnabled]);
+  ], [copied, router, setTheme, navigateToSection, copyToClipboard, soundEnabled, setSoundEnabled, t]);
 
   // Filter commands based on search
   const filteredCommands = React.useMemo(() => {
@@ -370,7 +376,7 @@ export function CommandPalette() {
         className="fixed bottom-4 right-4 z-40 hidden md:flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground bg-background/80 backdrop-blur-sm border rounded-lg hover:bg-accent transition-colors"
       >
         <SearchIcon className="size-3" />
-        <span>Search</span>
+        <span>{t.commandPalette.search}</span>
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
           <span className="text-xs">⌘</span>K
         </kbd>
@@ -385,7 +391,7 @@ export function CommandPalette() {
             <SearchIcon className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <input
               className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
-              placeholder="Type a command or search..."
+              placeholder={t.commandPalette.placeholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               autoFocus
@@ -396,7 +402,7 @@ export function CommandPalette() {
           <div className="max-h-[400px] overflow-y-auto overflow-x-hidden p-2">
             {filteredCommands.length === 0 ? (
               <div className="py-6 text-center text-sm text-muted-foreground">
-                No results found.
+                {t.commandPalette.noResults}
               </div>
             ) : (
               Object.entries(groupedCommands).map(([group, cmds]) => (
@@ -447,18 +453,20 @@ export function CommandPalette() {
                 <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">
                   ↑↓
                 </kbd>
-                navigate
+                {t.commandPalette.navigate}
               </span>
               <span className="flex items-center gap-1">
                 <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">
                   ↵
                 </kbd>
-                select
+                {t.commandPalette.select}
               </span>
             </div>
             <span>
               {filteredCommands.length}{" "}
-              {filteredCommands.length === 1 ? "result" : "results"}
+              {filteredCommands.length === 1
+                ? t.commandPalette.result
+                : t.commandPalette.results}
             </span>
           </div>
           </DialogPrimitive.Content>

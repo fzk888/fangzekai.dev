@@ -8,8 +8,8 @@ export function PersonSchema() {
         __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Person",
-          name: "Fang Zekai",
-          alternateName: ["方泽铠", "fangzekai"],
+          name: "方泽铠",
+          alternateName: ["Fang Zekai", "fangzekai"],
           description: DATA.description,
           image: `${DATA.url}/me.png`,
           url: DATA.url,

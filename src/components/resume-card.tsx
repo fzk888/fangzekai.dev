@@ -9,24 +9,23 @@ import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { localize, type LocalizedText } from "@/i18n/config";
 
 interface ResumeCardProps {
   logoUrl: string;
   altText: string;
-  title: string;
-  titleZh?: string;
-  subtitle?: string;
+  title: string | LocalizedText;
+  subtitle?: string | LocalizedText;
   href?: string;
   badges?: readonly string[];
-  period: string;
-  description?: string;
+  period: string | LocalizedText;
+  description?: string | LocalizedText;
   redacted?: boolean;
 }
 export const ResumeCard = ({
   logoUrl,
   altText,
   title,
-  titleZh,
   subtitle,
   href,
   badges,
@@ -35,7 +34,10 @@ export const ResumeCard = ({
   redacted,
 }: ResumeCardProps) => {
   const { locale } = useLanguage();
-  const displayTitle = titleZh && locale === "zh" ? titleZh : title;
+  const displayTitle = localize(title, locale) ?? "";
+  const displaySubtitle = localize(subtitle, locale);
+  const displayPeriod = localize(period, locale) ?? "";
+  const displayDescription = localize(description, locale);
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const hasLink = !!href && href !== "#";
@@ -43,7 +45,7 @@ export const ResumeCard = ({
   const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     // Company-name link is its own <a> and stops propagation, so reaching here
     // means the rest of the card was clicked -> toggle the description.
-    if (description) {
+    if (displayDescription) {
       setIsExpanded(!isExpanded);
     }
   };
@@ -64,14 +66,14 @@ export const ResumeCard = ({
             href={href}
             displayTitle={displayTitle}
             badges={badges}
-            period={period}
-            subtitle={subtitle}
-            description={description}
+            period={displayPeriod}
+            subtitle={displaySubtitle}
+            description={displayDescription}
             isExpanded={isExpanded}
           />
         </div>
       ) : (
-        <Link href={href || "#"} {...cardProps}>
+        <div {...cardProps}>
           <CardBody
             logoUrl={logoUrl}
             altText={altText}
@@ -79,12 +81,12 @@ export const ResumeCard = ({
             href={undefined}
             displayTitle={displayTitle}
             badges={badges}
-            period={period}
-            subtitle={subtitle}
-            description={description}
+            period={displayPeriod}
+            subtitle={displaySubtitle}
+            description={displayDescription}
             isExpanded={isExpanded}
           />
-        </Link>
+        </div>
       )}
     </>
   );

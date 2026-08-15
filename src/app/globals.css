@@ -124,16 +124,8 @@
   
   code[data-theme*=" "],
   code[data-theme*=" "] span {
-    color: var(--shiki-light);
-    background-color: var(--shiki-light-bg);
-  }
-   
-  @media (prefers-color-scheme: dark) {
-    code[data-theme*=" "],
-    code[data-theme*=" "] span {
-      color: var(--shiki-dark);
-      background-color: var(--shiki-dark-bg);
-    }
+    color: var(--shiki-dark, #c9d1d9);
+    background-color: transparent;
   }
   
   code[data-line-numbers] {
@@ -320,6 +312,45 @@ html,
 body {
   overflow-x: hidden;
   scroll-behavior: smooth;
+}
+
+@media (any-hover: hover) and (any-pointer: fine) {
+  html.smooth-cursor-active,
+  html.smooth-cursor-active *,
+  html.smooth-cursor-active *::before,
+  html.smooth-cursor-active *::after {
+    cursor: none !important;
+  }
+
+  html.smooth-cursor-active :is(
+    input,
+    textarea,
+    select,
+    [contenteditable]:not([contenteditable="false"])
+  ),
+  html.smooth-cursor-active :is(
+    input,
+    textarea,
+    select,
+    [contenteditable]:not([contenteditable="false"])
+  ) * {
+    cursor: auto !important;
+  }
+
+  html.smooth-cursor-active :is(
+    textarea,
+    input:not([type]),
+    input[type="text"],
+    input[type="email"],
+    input[type="search"],
+    input[type="url"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="number"],
+    [contenteditable]:not([contenteditable="false"])
+  ) {
+    cursor: text !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

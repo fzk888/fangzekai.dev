@@ -201,15 +201,16 @@ Update the following files to customize content:
 
 - `src/data/resume.tsx`: Personal information and experience
 - `src/data/products.ts`: Recommended products
-- `content/*.mdx`: Blog posts
+- `content/*.md`: Blog posts
 
 ## 📝 Adding Blog Posts
 
-Create a new MDX file in the `content` directory:
+Create a new Markdown file in the `content` directory:
 
-```mdx
+```markdown
 ---
 title: "Your Post Title"
+slug: "your-post-url"
 publishedAt: "2024-01-01"
 summary: "Brief description of your post"
 ---

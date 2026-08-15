@@ -2,6 +2,7 @@ import BlurFade from "@/components/magicui/blur-fade";
 import { DATA } from "@/data/resume";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { ProjectCard } from "@/components/project-card";
+import { PageTitle } from "@/components/i18n-content";
 
 export const metadata = {
   title: "Projects",
@@ -14,7 +15,9 @@ export default function ProjectsPage() {
   return (
     <section>
       <BlurFade delay={BLUR_FADE_DELAY}>
-        <h1 className="font-medium text-2xl mb-8 tracking-tighter">projects</h1>
+        <h1 className="font-medium text-2xl mb-8 tracking-tighter">
+          <PageTitle page="projects" />
+        </h1>
       </BlurFade>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {DATA.projects.map((project, id) => (

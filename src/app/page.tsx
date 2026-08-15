@@ -1,12 +1,10 @@
 import dynamic from 'next/dynamic';
 import { DATA } from "@/data/resume";
 import Link from "next/link";
-import Markdown from "react-markdown";
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { ProjectCard } from "@/components/project-card";
 import { ResumeCard } from "@/components/resume-card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { PersonSchema } from "@/components/schema/person-schema";
@@ -14,7 +12,6 @@ import { Metadata } from 'next';
 import { Icons } from "@/components/icons";
 import ShinyButton from "@/components/ui/shiny-button";
 import { GithubSkeleton } from "@/components/skeletons/github-skeleton";
-import { GitHubSponsors } from "@/components/github-sponsors";
 import { TwitterTestimonials } from "@/components/twitter-testimonials";
 import { AgeCounter } from "@/components/age-counter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,7 +31,7 @@ import {
   HeadingI18n,
   ViewAllProjectsButton,
   ContactMessage,
-  LetsTalkButton,
+  ContactEmailButton,
   FooterTagline,
   FooterLinks,
   FooterMeta,
@@ -42,6 +39,9 @@ import {
   FooterRss,
   FooterSource,
   FooterOpenSource,
+  HeroGreetingHeading,
+  Summary,
+  Localized,
 } from "@/components/i18n-content";
 
 const VisitorCounter = dynamic(() => import("@/components/visitor-counter"), {
@@ -93,12 +93,9 @@ export default function Page() {
           <div className="mx-auto w-full space-y-8">
             <div className="flex flex-col-reverse items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex-col flex flex-1 space-y-1.5">
-                <BlurFadeText
-                  delay={BLUR_FADE_DELAY}
-                  className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
-                  yOffset={8}
-                  text={`hey, ${DATA.name.split(" ")[0]} here`}
-                />
+                <BlurFade delay={BLUR_FADE_DELAY}>
+                  <HeroGreetingHeading />
+                </BlurFade>
                 <BlurFade delay={BLUR_FADE_DELAY * 1.5}>
                   <AgeCounter />
                 </BlurFade>
@@ -122,9 +119,7 @@ export default function Page() {
 
             {/* About */}
             <BlurFade delay={BLUR_FADE_DELAY * 3}>
-              <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
-                {DATA.summary}
-              </Markdown>
+              <Summary />
             </BlurFade>
 
             {/* Social links + Now Playing */}
@@ -318,19 +313,18 @@ export default function Page() {
             <div className="space-y-3">
               {DATA.work.map((work, id) => (
                 <BlurFade
-                  key={work.company}
+                  key={work.company.en}
                   delay={BLUR_FADE_DELAY * 12.5 + id * 0.05}
                 >
                   <ResumeCard
-                    key={work.company}
+                    key={work.company.en}
                     logoUrl={work.logoUrl}
-                    altText={work.company}
+                    altText={work.company.en}
                     title={work.company}
-                    titleZh={(work as any).companyZh}
                     subtitle={work.title}
                     href={work.href}
                     badges={work.badges}
-                    period={`${work.start} - ${work.end}`}
+                    period={work.period}
                     description={work.description}
                     redacted={(work as any).redacted}
                   />
@@ -350,17 +344,17 @@ export default function Page() {
             </BlurFade>
             {DATA.education.map((education, id) => (
               <BlurFade
-                key={education.school}
+                key={education.school.en}
                 delay={BLUR_FADE_DELAY * 13.5 + id * 0.05}
               >
                 <ResumeCard
-                  key={education.school}
+                  key={education.school.en}
                   href={education.href}
                   logoUrl={education.logoUrl}
-                  altText={education.school}
+                  altText={education.school.en}
                   title={education.school}
                   subtitle={education.degree}
-                  period={`${education.start} - ${education.end}`}
+                  period={education.period}
                 />
               </BlurFade>
             ))}
@@ -379,14 +373,6 @@ export default function Page() {
             <TwitterTestimonials />
           </BlurFade>
         </section>
-
-        {/* ─── SPONSORS ─── */}
-        <section id="sponsors">
-          <BlurFade delay={BLUR_FADE_DELAY * 15}>
-            <GitHubSponsors />
-          </BlurFade>
-        </section>
-
 
         {/* ─── CONTACT ─── */}
         <section id="contact">
@@ -410,16 +396,7 @@ export default function Page() {
               <p className="text-xl text-muted-foreground">
                <ContactMessage />
               </p>
-              <a
-                href="mailto:zekai_ai@163.com"
-                className="inline-flex items-center gap-2.5 rounded-full border border-border/70 bg-background/70 px-5 py-2.5 text-sm font-medium shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-background"
-              >
-                <Avatar className="size-6">
-                  <AvatarImage src={DATA.avatarUrl} alt={DATA.name} />
-                  <AvatarFallback>{DATA.initials}</AvatarFallback>
-                </Avatar>
-                <LetsTalkButton />
-              </a>
+              <ContactEmailButton />
               </div>
             </div>
           </BlurFade>
@@ -430,7 +407,9 @@ export default function Page() {
           <BlurFade delay={BLUR_FADE_DELAY * 17}>
             <div className="grid gap-6 sm:grid-cols-3">
               <div className="space-y-2">
-                <p className="text-sm font-medium">{DATA.name}</p>
+                <p className="text-sm font-medium">
+                  <Localized value={DATA.displayName} />
+                </p>
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   <FooterTagline />
                 </p>
@@ -445,7 +424,7 @@ export default function Page() {
                       href={item.href}
                       className="text-xs text-muted-foreground hover:text-foreground transition-colors w-fit"
                     >
-                      {item.label}
+                      <Localized value={item.label} />
                     </Link>
                   ))}
                 </div>
@@ -474,7 +453,8 @@ export default function Page() {
 
             <div className="mt-8 flex flex-col gap-3 border-t border-border/30 pt-6 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs text-muted-foreground/60">
-                © {new Date().getFullYear()} {DATA.name}. <FooterOpenSource />{' '}
+                © {new Date().getFullYear()} <Localized value={DATA.displayName} />.{" "}
+                <FooterOpenSource />{' '}
                 <a
                   href="https://opensource.org/licenses/MIT"
                   target="_blank"

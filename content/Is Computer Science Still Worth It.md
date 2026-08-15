@@ -1,5 +1,6 @@
 ---
 title: "Is Computer Science Still Worth It?"
+slug: "hello-world"
 publishedAt: "2024-12-07"
 summary: "The real scoop on tech careers from a friend who's been there"
 tags: ["tech", "computerscience", "coding"]

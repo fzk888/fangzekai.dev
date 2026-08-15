@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useLanguage } from "@/components/language-provider";
 
 const VideoCard = dynamic(() => import("@/components/video-card").then(mod => mod.VideoCard), {
   loading: () => <VideoSkeleton />
@@ -32,6 +33,7 @@ interface VideosListProps {
 const BLUR_FADE_DELAY = 0.04;
 
 export function VideosList({ videos }: VideosListProps) {
+  const { t } = useLanguage();
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
 
   const sortedVideos = [...videos].sort((a, b) => {
@@ -48,11 +50,11 @@ export function VideosList({ videos }: VideosListProps) {
           <Select value={sortOrder} onValueChange={(value: "newest" | "oldest") => setSortOrder(value)}>
             <SelectTrigger className="w-[180px]">
               <ArrowUpDown className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Sort by date" />
+              <SelectValue placeholder={t.pages.videos.sortPlaceholder} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="newest">Newest First</SelectItem>
-              <SelectItem value="oldest">Oldest First</SelectItem>
+              <SelectItem value="newest">{t.pages.videos.newest}</SelectItem>
+              <SelectItem value="oldest">{t.pages.videos.oldest}</SelectItem>
             </SelectContent>
           </Select>
         </div>

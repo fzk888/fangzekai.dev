@@ -1,5 +1,6 @@
 ---
 title: 'How to use Cursor for Free'
+slug: "cursor-free"
 publishedAt: "2025-04-09"
 summary: 'A comprehensive guide explaining how to use Cursor for free'
 tags: ['Cursor', 'AI', 'Web Development', 'JavaScript']

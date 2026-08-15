@@ -1,5 +1,6 @@
 ---
 title: "How I Actually Use AI As a Developer (No BS Guide)"
+slug: "ai-in-your-workflow"
 publishedAt: "2026-01-08"
 summary: "Not the 'AI will replace developers' take. Just the real ways I use AI tools every day to ship faster."
 tags: ["ai", "developer", "productivity", "cursor"]

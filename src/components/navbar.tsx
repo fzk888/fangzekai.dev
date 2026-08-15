@@ -12,8 +12,11 @@ import { Menu, X, Terminal, Home } from "lucide-react";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { buttonVariants } from "@/components/ui/button";
+import { useLanguage } from "@/components/language-provider";
+import { localize } from "@/i18n/config";
 
 export default function Navbar() {
+  const { locale, t } = useLanguage();
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -80,7 +83,7 @@ export default function Navbar() {
                 <Link
                   href="/"
                   className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-foreground hover:bg-muted/60"
-                  aria-label="Home"
+                  aria-label={t.accessibility.home}
                 >
                   <Home className="size-5" />
                 </Link>
@@ -130,7 +133,7 @@ export default function Navbar() {
                               transition={{ duration: 0.15 }}
                             />
                           )}
-                          {item.label}
+                          {localize(item.label, locale)}
                         </Link>
                       );
                     })}
@@ -142,7 +145,7 @@ export default function Navbar() {
                     <Link
                       href="/cli"
                       className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-foreground hover:bg-muted/60"
-                      aria-label="CLI Mode"
+                      aria-label={t.accessibility.cliMode}
                     >
                       <Terminal className="size-4" />
                     </Link>
@@ -158,7 +161,7 @@ export default function Navbar() {
                   <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className="relative rounded-lg p-2 text-muted-foreground transition-colors hover:text-foreground hover:bg-muted/60"
-                    aria-label="Toggle menu"
+                    aria-label={t.accessibility.toggleMenu}
                   >
                     <AnimatePresence mode="wait" initial={false}>
                       {isMobileMenuOpen ? (
@@ -227,7 +230,7 @@ export default function Navbar() {
                               )}
                             >
                               <item.icon className="size-4" />
-                              {item.label}
+                              {localize(item.label, locale)}
                             </Link>
                           </motion.div>
                         );
@@ -281,13 +284,13 @@ export default function Navbar() {
                           "size-10 rounded-full",
                           pathname === item.href && "bg-muted/80 text-foreground"
                         )}
-                        aria-label={item.label}
+                        aria-label={localize(item.label, locale)}
                       >
                         <item.icon className="size-[18px]" />
                       </Link>
                     </TooltipTrigger>
                     <TooltipContent sideOffset={10}>
-                      <p>{item.label}</p>
+                      <p>{localize(item.label, locale)}</p>
                     </TooltipContent>
                   </Tooltip>
                 </DockIcon>
@@ -304,13 +307,13 @@ export default function Navbar() {
                         buttonVariants({ variant: "ghost", size: "icon" }),
                         "size-10 rounded-full"
                       )}
-                      aria-label="CLI Mode"
+                      aria-label={t.accessibility.cliMode}
                     >
                       <Terminal className="size-[18px]" />
                     </Link>
                   </TooltipTrigger>
                   <TooltipContent sideOffset={10}>
-                    <p>CLI Mode</p>
+                    <p>{t.accessibility.cliMode}</p>
                   </TooltipContent>
                 </Tooltip>
               </DockIcon>

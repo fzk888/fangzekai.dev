@@ -1,5 +1,6 @@
 ---
 title: 'How I Fixed the Black Screen Issue in KDE Plasma'
+slug: "black-screen-debian"
 publishedAt: "2025-08-17"
 summary: 'A simple guide explaining how to fix the black screen issue in KDE Plasma'
 tags: ['KDE', 'Linux', 'Debian', 'Plasma']

@@ -7,12 +7,16 @@ import type { Product } from '@/data/products';
 import Link from 'next/link';
 import { MagicCard } from "@/components/magicui/magic-card";
 import { ExternalLink } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
+import { localize } from "@/i18n/config";
 
 interface GadgetCardProps {
   product: Product;
 }
 
 export function GadgetCard({ product }: GadgetCardProps) {
+  const { locale, t } = useLanguage();
+
   return (
     <Link
       href={product.amazonLink}
@@ -32,7 +36,7 @@ export function GadgetCard({ product }: GadgetCardProps) {
           />
           {product.featured && (
             <Badge variant="secondary" className="absolute top-2 left-2 text-xs">
-              Featured
+              {t.pages.gadgets.featured}
             </Badge>
           )}
           {/* Hover overlay with external link icon */}
@@ -47,7 +51,7 @@ export function GadgetCard({ product }: GadgetCardProps) {
             {product.title}
           </h3>
           <p className="text-muted-foreground text-xs line-clamp-2">
-            {product.description}
+            {localize(product.description, locale)}
           </p>
         </div>
       </MagicCard>

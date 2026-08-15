@@ -16,11 +16,13 @@ import { BorderBeam } from "@/components/magicui/border-beam";
 import { VideoPlayerModal } from "./video-player-modal";
 import { useState, useRef } from "react";
 import { Play, ExternalLink } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
+import { localize, type LocalizedText } from "@/i18n/config";
 
 interface Props {
   title: string;
   href?: string;
-  description: string;
+  description: string | LocalizedText;
   dates: string;
   tags?: readonly string[];
   link?: string;
@@ -46,6 +48,7 @@ export function ProjectCard({
   links,
   className,
 }: Props) {
+  const { locale, t } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -128,7 +131,7 @@ export function ProjectCard({
               {link?.replace("https://", "").replace("www.", "").replace("/", "")}
             </div>
             <Markdown className="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert line-clamp-3">
-              {description}
+              {localize(description, locale) ?? ""}
             </Markdown>
           </div>
         </CardHeader>
@@ -154,7 +157,7 @@ export function ProjectCard({
                 <Link href={link?.href} key={idx} target="_blank">
                   <Badge key={idx} className="flex gap-2 px-2 py-1 text-[10px]">
                     {link.icon}
-                    {link.type}
+                    {link.type === "Source" ? t.common.source : link.type}
                   </Badge>
                 </Link>
               ))}

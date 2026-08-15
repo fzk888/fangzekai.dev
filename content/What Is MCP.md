@@ -1,5 +1,6 @@
 ---
 title: "MCP Changed How I Use AI. Here's What It Actually Is"
+slug: "what-is-mcp"
 publishedAt: "2026-01-14"
 summary: "Model Context Protocol sounds fancy but it's basically giving AI tools superpowers. Here's how I actually use it."
 tags: ["ai", "mcp", "cursor", "developer-tools"]

@@ -1,5 +1,6 @@
 ---
 title: "I Went Through Anthropic's Academy. Here's What's Actually Useful"
+slug: "anthropic-academy"
 publishedAt: "2026-01-12"
 summary: "Anthropic has a free course on prompt engineering and using Claude effectively. Some of it's gold, some of it you can skip."
 tags: ["ai", "anthropic", "claude", "learning"]

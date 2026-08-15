@@ -1,11 +1,11 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDate } from "@/lib/utils";
 import Image from "next/image";
 import { PlayIcon } from "lucide-react";
 import { useState } from "react";
 import { VideoPlayerModal } from "./video-player-modal";
+import { useLanguage } from "@/components/language-provider";
 
 interface VideoCardProps {
   video: {
@@ -18,13 +18,19 @@ interface VideoCardProps {
 }
 
 export function VideoCard({ video }: VideoCardProps) {
+  const { locale, t } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const formattedDate = new Intl.DateTimeFormat(
+    locale === "zh" ? "zh-CN" : "en-US",
+    { year: "numeric", month: "short", day: "numeric" }
+  ).format(new Date(video.date));
 
   return (
     <>
       <div 
         role="button"
         tabIndex={0}
+        aria-label={t.actions.openVideo.replace("{title}", video.title)}
         onClick={() => setIsModalOpen(true)} 
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -50,7 +56,7 @@ export function VideoCard({ video }: VideoCardProps) {
           <CardHeader className="p-4">
             <CardTitle className="text-lg">{video.title}</CardTitle>
             <time className="text-sm text-muted-foreground">
-              {formatDate(video.date)}
+              {formattedDate}
             </time>
           </CardHeader>
           <CardContent className="p-4 pt-0">

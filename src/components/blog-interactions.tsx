@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { Share2 } from 'lucide-react';
+import { useLanguage } from "@/components/language-provider";
 
 interface BlogInteractionsProps {
   slug: string;  // Keep slug for future use if needed
 }
 
 export function BlogInteractions({ slug }: BlogInteractionsProps) {
+  const { t } = useLanguage();
   const [isSharing, setIsSharing] = useState(false);
   const [copySuccess, setCopySuccess] = useState<string>('');
   const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
@@ -24,7 +26,7 @@ export function BlogInteractions({ slug }: BlogInteractionsProps) {
         });
       } else {
         await navigator.clipboard.writeText(shareUrl);
-        setCopySuccess('Link copied!');
+        setCopySuccess(t.actions.linkCopied);
         setTimeout(() => setCopySuccess(''), 2000);
       }
     } catch (error) {
@@ -44,7 +46,7 @@ export function BlogInteractions({ slug }: BlogInteractionsProps) {
         className="flex items-center gap-2"
       >
         <Share2 className="w-4 h-4" />
-        <span>{isSharing ? 'Sharing...' : 'Share'}</span>
+        <span>{isSharing ? t.actions.sharing : t.actions.share}</span>
       </Button>
       {copySuccess && (
         <span className="text-sm text-green-600 dark:text-green-400">

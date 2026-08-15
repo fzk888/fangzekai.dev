@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/components/language-provider";
 
 export function BlogArticle({ html }: { html: string }) {
+  const { t } = useLanguage();
   const articleRef = useRef<HTMLElement>(null);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState("");
@@ -72,13 +74,13 @@ export function BlogArticle({ html }: { html: string }) {
           onClick={closeLightbox}
           role="dialog"
           aria-modal="true"
-          aria-label={lightboxAlt || "Image preview"}
+          aria-label={lightboxAlt || t.accessibility.imagePreview}
         >
           <div className="relative flex flex-col items-end gap-2" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={closeLightbox}
               className="rounded-full bg-white/10 p-2 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
-              aria-label="Close"
+              aria-label={t.accessibility.close}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" />

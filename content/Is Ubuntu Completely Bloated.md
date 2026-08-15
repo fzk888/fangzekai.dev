@@ -1,5 +1,6 @@
 ---
 title: "Is Ubuntu Completely bloated?"
+slug: "ubuntu-is-bloated"
 publishedAt: "2024-12-16"
 summary: "The reality of Ubuntu Distro now"
 tags: ["tech", "computerscience", "coding","ubuntu","Linux"]

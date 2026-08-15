@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 
 export function BackToTop() {
+  const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export function BackToTop() {
             transition-all duration-200
             backdrop-blur-sm
             group"
-          aria-label="Back to top"
+          aria-label={t.actions.backToTop}
         >
           <ArrowUp className="size-5 group-hover:-translate-y-0.5 transition-transform" />
         </motion.button>

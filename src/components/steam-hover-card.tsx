@@ -10,6 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icons } from "@/components/icons";
 import { Gamepad2, Trophy, MonitorPlay } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 
 interface SteamData {
   name: string;
@@ -56,6 +57,7 @@ let cachedAt = 0;
 const CACHE_TTL = 2 * 60 * 1000; // 2 minutes
 
 export function SteamHoverCard({ children }: { children: ReactNode }) {
+  const { t } = useLanguage();
   const [data, setData] = useState<SteamData | null>(cachedData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -101,7 +103,7 @@ export function SteamHoverCard({ children }: { children: ReactNode }) {
         ) : error && !data ? (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Icons.steam className="size-4" />
-            <span>Could not load profile</span>
+            <span>{t.profile.loadError}</span>
           </div>
         ) : data ? (
           <div className="flex flex-col gap-3">
@@ -119,7 +121,7 @@ export function SteamHoverCard({ children }: { children: ReactNode }) {
                 <p className="text-sm font-semibold truncate">{data.name}</p>
                 <p className="text-xs text-muted-foreground truncate">
                   {data.gameextrainfo
-                    ? `Playing ${data.gameextrainfo}`
+                    ? t.profile.playing.replace("{game}", data.gameextrainfo)
                     : data.status}
                 </p>
               </div>
@@ -140,7 +142,7 @@ export function SteamHoverCard({ children }: { children: ReactNode }) {
                   <MonitorPlay className="size-3.5 text-emerald-500 shrink-0" />
                 )}
                 <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 truncate">
-                  Playing {data.gameextrainfo}
+                  {t.profile.playing.replace("{game}", data.gameextrainfo)}
                 </p>
               </div>
             )}
@@ -151,14 +153,14 @@ export function SteamHoverCard({ children }: { children: ReactNode }) {
                 <span className="font-medium text-foreground">
                   {data.level}
                 </span>
-                <span>Level</span>
+                <span>{t.profile.level}</span>
               </div>
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Gamepad2 className="size-3.5" />
                 <span className="font-medium text-foreground">
                   {data.gamesCount}
                 </span>
-                <span>Games</span>
+                <span>{t.profile.games}</span>
               </div>
             </div>
           </div>

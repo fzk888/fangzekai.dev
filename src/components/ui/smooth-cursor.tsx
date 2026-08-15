@@ -1,38 +1,32 @@
 "use client"
 
-import { FC, useEffect, useRef, useState } from "react"
-import { motion, useSpring } from "framer-motion"
-
-interface Position {
-  x: number
-  y: number
-}
+import { motion, useMotionValue, useReducedMotion } from "framer-motion"
+import type { FC, ReactNode } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export interface SmoothCursorProps {
-  cursor?: React.ReactNode
-  springConfig?: {
-    damping: number
-    stiffness: number
-    mass: number
-    restDelta: number
-  }
+  cursor?: ReactNode
 }
 
 const DESKTOP_POINTER_QUERY = "(any-hover: hover) and (any-pointer: fine)"
+const INTERACTIVE_SELECTOR =
+  'a, button, summary, [role="button"], [role="link"], .cursor-pointer'
+const NATIVE_CURSOR_SELECTOR =
+  'input, textarea, select, [contenteditable]:not([contenteditable="false"])'
 
-function isTrackablePointer(pointerType: string) {
-  return pointerType !== "touch"
+function isMousePointer(pointerType: string) {
+  return pointerType === "mouse"
 }
 
 const DefaultCursorSVG: FC = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={50}
-      height={54}
+      width={25}
+      height={27}
       viewBox="0 0 50 54"
       fill="none"
-      style={{ scale: 0.5 }}
+      aria-hidden="true"
     >
       <g filter="url(#filter0_d_91_7928)">
         <path
@@ -88,44 +82,25 @@ const DefaultCursorSVG: FC = () => {
 
 export function SmoothCursor({
   cursor = <DefaultCursorSVG />,
-  springConfig = {
-    damping: 45,
-    stiffness: 400,
-    mass: 1,
-    restDelta: 0.001,
-  },
 }: SmoothCursorProps) {
-  const lastMousePos = useRef<Position>({ x: 0, y: 0 })
-  const velocity = useRef<Position>({ x: 0, y: 0 })
-  const lastUpdateTime = useRef(Date.now())
-  const previousAngle = useRef(0)
-  const accumulatedRotation = useRef(0)
+  const prefersReducedMotion = useReducedMotion()
+  const cursorX = useMotionValue(-100)
+  const cursorY = useMotionValue(-100)
+  const visibleRef = useRef(false)
+  const interactiveRef = useRef(false)
+  const nativeCursorRef = useRef(false)
+  const pressedRef = useRef(false)
   const [isEnabled, setIsEnabled] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-
-  const cursorX = useSpring(0, springConfig)
-  const cursorY = useSpring(0, springConfig)
-  const rotation = useSpring(0, {
-    ...springConfig,
-    damping: 60,
-    stiffness: 300,
-  })
-  const scale = useSpring(1, {
-    ...springConfig,
-    stiffness: 500,
-    damping: 35,
-  })
+  const [isInteractive, setIsInteractive] = useState(false)
+  const [usesNativeCursor, setUsesNativeCursor] = useState(false)
+  const [isPressed, setIsPressed] = useState(false)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(DESKTOP_POINTER_QUERY)
 
     const updateEnabled = () => {
-      const nextIsEnabled = mediaQuery.matches
-      setIsEnabled(nextIsEnabled)
-
-      if (!nextIsEnabled) {
-        setIsVisible(false)
-      }
+      setIsEnabled(mediaQuery.matches)
     }
 
     updateEnabled()
@@ -141,125 +116,151 @@ export function SmoothCursor({
       return
     }
 
-    let timeout: ReturnType<typeof setTimeout> | null = null
+    const root = document.documentElement
+    root.classList.add("smooth-cursor-active")
 
-    const updateVelocity = (currentPos: Position) => {
-      const currentTime = Date.now()
-      const deltaTime = currentTime - lastUpdateTime.current
-
-      if (deltaTime > 0) {
-        velocity.current = {
-          x: (currentPos.x - lastMousePos.current.x) / deltaTime,
-          y: (currentPos.y - lastMousePos.current.y) / deltaTime,
-        }
-      }
-
-      lastUpdateTime.current = currentTime
-      lastMousePos.current = currentPos
+    const updateVisible = (nextValue: boolean) => {
+      if (visibleRef.current === nextValue) return
+      visibleRef.current = nextValue
+      setIsVisible(nextValue)
     }
 
-    const smoothPointerMove = (e: PointerEvent) => {
-      if (!isTrackablePointer(e.pointerType)) {
-        return
-      }
+    const updateInteractive = (nextValue: boolean) => {
+      if (interactiveRef.current === nextValue) return
+      interactiveRef.current = nextValue
+      setIsInteractive(nextValue)
+    }
 
-      setIsVisible(true)
+    const updateNativeCursor = (nextValue: boolean) => {
+      if (nativeCursorRef.current === nextValue) return
+      nativeCursorRef.current = nextValue
+      setUsesNativeCursor(nextValue)
+    }
 
-      const currentPos = { x: e.clientX, y: e.clientY }
-      updateVelocity(currentPos)
+    const updatePressed = (nextValue: boolean) => {
+      if (pressedRef.current === nextValue) return
+      pressedRef.current = nextValue
+      setIsPressed(nextValue)
+    }
 
-      const speed = Math.sqrt(
-        Math.pow(velocity.current.x, 2) + Math.pow(velocity.current.y, 2)
+    const updateTargetState = (target: EventTarget | null) => {
+      const element = target instanceof Element ? target : null
+      const nextUsesNativeCursor = Boolean(
+        element?.closest(NATIVE_CURSOR_SELECTOR)
       )
 
-      cursorX.set(currentPos.x)
-      cursorY.set(currentPos.y)
-
-      if (speed > 0.1) {
-        const currentAngle =
-          Math.atan2(velocity.current.y, velocity.current.x) * (180 / Math.PI) +
-          90
-
-        let angleDiff = currentAngle - previousAngle.current
-        if (angleDiff > 180) angleDiff -= 360
-        if (angleDiff < -180) angleDiff += 360
-        accumulatedRotation.current += angleDiff
-        rotation.set(accumulatedRotation.current)
-        previousAngle.current = currentAngle
-
-        scale.set(0.95)
-
-        if (timeout !== null) {
-          clearTimeout(timeout)
-        }
-
-        timeout = setTimeout(() => {
-          scale.set(1)
-        }, 150)
-      }
+      updateNativeCursor(nextUsesNativeCursor)
+      updateInteractive(
+        !nextUsesNativeCursor &&
+          Boolean(element?.closest(INTERACTIVE_SELECTOR))
+      )
     }
 
-    let rafId = 0
-    const throttledPointerMove = (e: PointerEvent) => {
-      if (!isTrackablePointer(e.pointerType)) {
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!isMousePointer(event.pointerType)) {
+        updateVisible(false)
         return
       }
 
-      if (rafId) return
+      const coalescedEvents = event.getCoalescedEvents?.() ?? []
+      const latestEvent = coalescedEvents.at(-1) ?? event
 
-      rafId = requestAnimationFrame(() => {
-        smoothPointerMove(e)
-        rafId = 0
-      })
+      cursorX.set(latestEvent.clientX)
+      cursorY.set(latestEvent.clientY)
+      updateTargetState(event.target)
+      updateVisible(true)
     }
 
-    const style = document.createElement("style")
-    style.id = "smooth-cursor-hide"
-    style.textContent = "*, *::before, *::after { cursor: none !important; }"
-    document.head.appendChild(style)
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!isMousePointer(event.pointerType) || nativeCursorRef.current) return
+      updatePressed(true)
+    }
 
-    window.addEventListener("pointermove", throttledPointerMove, {
-      passive: true,
-    })
+    const handlePointerUp = () => {
+      updatePressed(false)
+    }
 
-    return () => {
-      window.removeEventListener("pointermove", throttledPointerMove)
-      style.remove()
-      if (rafId) cancelAnimationFrame(rafId)
-      if (timeout !== null) {
-        clearTimeout(timeout)
+    const hideCursor = () => {
+      updateVisible(false)
+      updatePressed(false)
+    }
+
+    const handlePointerOut = (event: PointerEvent) => {
+      if (event.relatedTarget === null) {
+        hideCursor()
       }
     }
-  }, [cursorX, cursorY, rotation, scale, isEnabled])
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        hideCursor()
+      }
+    }
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true })
+    window.addEventListener("pointerdown", handlePointerDown, { passive: true })
+    window.addEventListener("pointerup", handlePointerUp, { passive: true })
+    window.addEventListener("pointercancel", handlePointerUp, { passive: true })
+    window.addEventListener("pointerout", handlePointerOut, { passive: true })
+    window.addEventListener("blur", hideCursor)
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+
+    return () => {
+      root.classList.remove("smooth-cursor-active")
+      window.removeEventListener("pointermove", handlePointerMove)
+      window.removeEventListener("pointerdown", handlePointerDown)
+      window.removeEventListener("pointerup", handlePointerUp)
+      window.removeEventListener("pointercancel", handlePointerUp)
+      window.removeEventListener("pointerout", handlePointerOut)
+      window.removeEventListener("blur", hideCursor)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+    }
+  }, [cursorX, cursorY, isEnabled])
 
   if (!isEnabled) {
     return null
   }
 
+  const targetScale = isPressed ? 0.88 : isInteractive ? 1.12 : 1
+  const targetOpacity = isVisible && !usesNativeCursor ? 1 : 0
+
   return (
-    <>
-      <motion.div
-        style={{
-          position: "fixed",
-          left: cursorX,
-          top: cursorY,
-          translateX: "-50%",
-          translateY: "-50%",
-          rotate: rotation,
-          scale: scale,
-          zIndex: 100,
-          pointerEvents: "none",
-          willChange: "transform",
-        opacity: isVisible ? 1 : 0,
-      }}
+    <motion.div
+      aria-hidden="true"
       initial={false}
-      animate={{ opacity: isVisible ? 1 : 0 }}
-        transition={{
-          duration: 0.15,
+      animate={{ opacity: targetOpacity, scale: targetScale }}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : {
+              opacity: { duration: 0.12 },
+              scale: { duration: 0.12, ease: [0.16, 1, 0.3, 1] },
+            }
+      }
+      style={{
+        position: "fixed",
+        left: 0,
+        top: 0,
+        x: cursorX,
+        y: cursorY,
+        width: 25,
+        height: 27,
+        transformOrigin: "0 0",
+        zIndex: 100,
+        pointerEvents: "none",
+        willChange: "transform, opacity",
+      }}
+    >
+      <div
+        style={{
+          width: 25,
+          height: 27,
+          transform: "translate(-50%, -10%)",
+          transformOrigin: "50% 10%",
         }}
       >
         {cursor}
-      </motion.div>
-    </>
+      </div>
+    </motion.div>
   )
 }

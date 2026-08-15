@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, MessageCircle, Send } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
+import type { Locale } from "@/i18n/config";
+import type { Translations } from "@/i18n/en";
 
 type GuestbookNote = {
   id: string;
@@ -18,42 +21,42 @@ const starterNotes: GuestbookNote[] = [
     id: "starter-1",
     message: "这个站点很有个人气质，继续做下去会很酷。",
     author: "匿名朋友",
-    createdAt: "刚刚",
+    createdAt: "starter.justNow",
     tone: "sky",
   },
   {
     id: "starter-2",
     message: "路过留一句：AI 项目和博客都可以继续更，想看。",
     author: "路过的人",
-    createdAt: "今天",
+    createdAt: "starter.today",
     tone: "lime",
   },
   {
     id: "starter-3",
     message: "这个页面的氛围很舒服，有种真的有人在认真搭自己空间的感觉。",
     author: "访客",
-    createdAt: "昨天",
+    createdAt: "starter.yesterday",
     tone: "rose",
   },
   {
     id: "starter-4",
     message: "加油，慢慢把它改成完全属于你的作品集。",
     author: "朋友",
-    createdAt: "2 天前",
+    createdAt: "starter.2days",
     tone: "violet",
   },
   {
     id: "starter-5",
     message: "想看更多你做 Agent 和 RAG 的项目记录。",
     author: "匿名朋友",
-    createdAt: "3 天前",
+    createdAt: "starter.3days",
     tone: "amber",
   },
   {
     id: "starter-6",
     message: "保持这种探索感，网站会越来越像你。",
     author: "某位同学",
-    createdAt: "上周",
+    createdAt: "starter.7days",
     tone: "slate",
   },
 ];
@@ -69,7 +72,16 @@ const toneClassName: Record<GuestbookNote["tone"], string> = {
 
 const tones: GuestbookNote["tone"][] = ["sky", "lime", "rose", "violet", "amber", "slate"];
 
-function formatNoteTime(value: string) {
+function formatNoteTime(value: string, locale: Locale, t: Translations) {
+  const starterTimes: Record<string, string> = {
+    "starter.justNow": t.guestbook.justNow,
+    "starter.today": t.guestbook.today,
+    "starter.yesterday": t.guestbook.yesterday,
+    "starter.2days": t.guestbook.daysAgo.replace("{count}", "2"),
+    "starter.3days": t.guestbook.daysAgo.replace("{count}", "3"),
+    "starter.7days": t.guestbook.daysAgo.replace("{count}", "7"),
+  };
+  if (starterTimes[value]) return starterTimes[value];
   if (!value.includes("T")) return value;
 
   const date = new Date(value);
@@ -80,13 +92,23 @@ function formatNoteTime(value: string) {
   const hour = 60 * minute;
   const day = 24 * hour;
 
-  if (diff < minute) return "刚刚";
-  if (diff < hour) return `${Math.floor(diff / minute)} 分钟前`;
-  if (diff < day) return "今天";
-  if (diff < 2 * day) return "昨天";
-  if (diff < 7 * day) return `${Math.floor(diff / day)} 天前`;
+  if (diff < minute) return t.guestbook.justNow;
+  if (diff < hour) {
+    return t.guestbook.minutesAgo.replace(
+      "{count}",
+      String(Math.floor(diff / minute))
+    );
+  }
+  if (diff < day) return t.guestbook.today;
+  if (diff < 2 * day) return t.guestbook.yesterday;
+  if (diff < 7 * day) {
+    return t.guestbook.daysAgo.replace(
+      "{count}",
+      String(Math.floor(diff / day))
+    );
+  }
 
-  return date.toLocaleDateString("zh-CN", {
+  return date.toLocaleDateString(locale === "zh" ? "zh-CN" : "en-US", {
     month: "numeric",
     day: "numeric",
   });
@@ -116,7 +138,15 @@ async function fetchGuestbookNotes() {
   return data.notes.filter(isGuestbookNote);
 }
 
-function GuestbookCard({ note }: { note: GuestbookNote }) {
+function GuestbookCard({
+  note,
+  locale,
+  t,
+}: {
+  note: GuestbookNote;
+  locale: Locale;
+  t: Translations;
+}) {
   return (
     <article
       className="relative flex h-[92px] w-[232px] shrink-0 flex-col justify-between overflow-hidden rounded-lg border border-border/55 bg-card/50 p-3 shadow-sm backdrop-blur-sm"
@@ -128,13 +158,14 @@ function GuestbookCard({ note }: { note: GuestbookNote }) {
       <p className="line-clamp-2 text-[13px] leading-5 text-foreground/90">“{note.message}”</p>
       <div className="flex items-center justify-between gap-3 pt-2 text-[10px] text-muted-foreground">
         <span className="truncate">{note.author}</span>
-        <span className="shrink-0">{formatNoteTime(note.createdAt)}</span>
+        <span className="shrink-0">{formatNoteTime(note.createdAt, locale, t)}</span>
       </div>
     </article>
   );
 }
 
 export function TwitterTestimonials() {
+  const { locale, t } = useLanguage();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState("");
   const [notes, setNotes] = useState<GuestbookNote[]>(starterNotes);
@@ -153,14 +184,14 @@ export function TwitterTestimonials() {
       })
       .catch(() => {
         if (!cancelled) {
-          setStatus("数据库还没连上。");
+          setStatus(t.guestbook.unavailable);
         }
       });
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [t.guestbook.unavailable]);
 
   const marqueeNotes = useMemo(() => [...notes, ...notes], [notes]);
 
@@ -177,7 +208,7 @@ export function TwitterTestimonials() {
   const submitNote = async () => {
     const trimmedMessage = message.trim();
     if (!trimmedMessage) {
-      setStatus("先写点什么再贴上墙。");
+      setStatus(t.guestbook.empty);
       return;
     }
 
@@ -203,10 +234,10 @@ export function TwitterTestimonials() {
         ...currentNotes.filter((note) => !note.id.startsWith("starter-")),
       ]);
       setMessage("");
-      setStatus("已贴上墙");
+      setStatus(t.guestbook.saved);
       setIsWriting(false);
     } catch {
-      setStatus("数据库还没连上。");
+      setStatus(t.guestbook.unavailable);
     } finally {
       setIsSubmitting(false);
     }
@@ -218,19 +249,21 @@ export function TwitterTestimonials() {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
             <MessageCircle className="size-3.5" />
-            留言簿
+            {t.guestbook.label}
           </div>
           <h2 className="text-base font-semibold tracking-tight sm:text-lg">
-            这里收着一些路过的话。
+            {t.guestbook.title}
           </h2>
         </div>
-        <p className="text-xs text-muted-foreground">匿名也可以，随便留一句。</p>
+        <p className="text-xs text-muted-foreground">{t.guestbook.subtitle}</p>
       </div>
 
       {isWriting ? (
         <div className="rounded-full border border-border/55 bg-card/45 p-1 shadow-sm backdrop-blur">
           <div className="flex items-center gap-2">
-            <label className="sr-only" htmlFor="guestbook-message">留言</label>
+            <label className="sr-only" htmlFor="guestbook-message">
+              {t.guestbook.inputLabel}
+            </label>
             <input
               id="guestbook-message"
               autoFocus
@@ -252,7 +285,7 @@ export function TwitterTestimonials() {
                   submitNote();
                 }
               }}
-              placeholder="写一句话..."
+              placeholder={t.guestbook.placeholder}
               className="h-8 min-w-0 flex-1 rounded-full bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground/65"
             />
             <span className="hidden text-[11px] text-muted-foreground sm:inline">
@@ -265,7 +298,9 @@ export function TwitterTestimonials() {
               className="inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full bg-foreground px-3 text-xs font-medium text-background transition hover:bg-foreground/90 sm:px-3.5"
             >
               <Send className="size-3.5" />
-              <span className="hidden sm:inline">{isSubmitting ? "保存中" : "贴上墙"}</span>
+              <span className="hidden sm:inline">
+                {isSubmitting ? t.guestbook.saving : t.guestbook.submit}
+              </span>
             </button>
           </div>
         </div>
@@ -280,7 +315,7 @@ export function TwitterTestimonials() {
             className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border/55 bg-card/45 px-3 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur transition hover:border-border hover:bg-card hover:text-foreground"
           >
             <Send className="size-3.5" />
-            写一句留言
+            {t.guestbook.write}
           </button>
           {status ? <span className="text-[11px] text-muted-foreground">{status}</span> : null}
         </div>
@@ -290,7 +325,7 @@ export function TwitterTestimonials() {
         <button
           onClick={() => scroll("left")}
           className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-border bg-background/80 p-2 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-background group-hover:opacity-100"
-          aria-label="Scroll left"
+          aria-label={t.accessibility.scrollLeft}
         >
           <ChevronLeft className="size-5" />
         </button>
@@ -298,7 +333,7 @@ export function TwitterTestimonials() {
         <button
           onClick={() => scroll("right")}
           className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-border bg-background/80 p-2 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-background group-hover:opacity-100"
-          aria-label="Scroll right"
+          aria-label={t.accessibility.scrollRight}
         >
           <ChevronRight className="size-5" />
         </button>
@@ -314,7 +349,12 @@ export function TwitterTestimonials() {
             }}
           >
             {marqueeNotes.map((note, idx) => (
-              <GuestbookCard key={`${note.id}-${idx}`} note={note} />
+              <GuestbookCard
+                key={`${note.id}-${idx}`}
+                note={note}
+                locale={locale}
+                t={t}
+              />
             ))}
           </div>
         </div>

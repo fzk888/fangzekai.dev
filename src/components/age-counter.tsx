@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/components/language-provider";
 
 const calculateYears = () => {
   const birthDate = new Date('2003-01-08T00:00:00');
@@ -10,6 +11,7 @@ const calculateYears = () => {
 };
 
 export function AgeCounter() {
+  const { t } = useLanguage();
   const [years, setYears] = useState<string | null>(null);
 
   useEffect(() => {
@@ -27,7 +29,9 @@ export function AgeCounter() {
   if (years === null) {
     return (
       <div className="text-sm font-bold min-h-[20px]">
-        <span className="tabular-nums opacity-0">been on earth for 00.000000000 years</span>
+        <span className="tabular-nums opacity-0">
+          {t.age.prefix} 00.000000000 {t.age.suffix}
+        </span>
       </div>
     );
   }
@@ -35,7 +39,7 @@ export function AgeCounter() {
   return (
     <div className="text-sm font-bold min-h-[20px]">
       <span className="tabular-nums">
-        been on earth for {years} years
+        {t.age.prefix} {years} {t.age.suffix}
       </span>
     </div>
   );

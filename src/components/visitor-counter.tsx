@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye } from 'lucide-react';
+import { useLanguage } from "@/components/language-provider";
 
 // Helper to get ordinal suffix (1st, 2nd, 3rd, etc.)
 function getOrdinalSuffix(n: number): string {
@@ -13,6 +14,7 @@ function getOrdinalSuffix(n: number): string {
 }
 
 export default function VisitorCounter() {
+  const { locale, t } = useLanguage();
   const [count, setCount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,7 +46,7 @@ export default function VisitorCounter() {
     return (
       <div className="text-sm text-muted-foreground flex items-center gap-2">
         <Eye className="size-4" />
-        <span className="opacity-50">Loading...</span>
+        <span className="opacity-50">{t.common.loading}</span>
       </div>
     );
   }
@@ -54,11 +56,11 @@ export default function VisitorCounter() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="text-sm text-muted-foreground flex items-center gap-2"
-      title="You are a unique visitor!"
+      title={t.visitor.title}
     >
       <Eye className="size-4" />
       <span>
-        You are the{' '}
+        {t.visitor.prefix}{' '}
         <motion.span
           key={count}
           initial={{ opacity: 0, y: 5 }}
@@ -66,10 +68,12 @@ export default function VisitorCounter() {
           className="font-semibold text-foreground tabular-nums"
           suppressHydrationWarning
         >
-          {count.toLocaleString()}
-          <sup className="text-xs">{getOrdinalSuffix(count)}</sup>
+          {count.toLocaleString(locale === "zh" ? "zh-CN" : "en-US")}
+          {locale === "en" && (
+            <sup className="text-xs">{getOrdinalSuffix(count)}</sup>
+          )}
         </motion.span>
-        {' '}visitor
+        {' '}{t.visitor.suffix}
       </span>
     </motion.div>
   );

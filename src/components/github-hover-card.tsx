@@ -9,6 +9,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icons } from "@/components/icons";
 import { Users, GitFork } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 
 interface GitHubData {
   name: string;
@@ -67,6 +68,7 @@ function Skeleton() {
 let cachedData: GitHubData | null = null;
 
 export function GitHubHoverCard({ children }: { children: ReactNode }) {
+  const { t } = useLanguage();
   const [data, setData] = useState<GitHubData | null>(cachedData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -110,7 +112,7 @@ export function GitHubHoverCard({ children }: { children: ReactNode }) {
         ) : error && !data ? (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Icons.github className="size-4" />
-            <span>Could not load profile</span>
+            <span>{t.profile.loadError}</span>
           </div>
         ) : data ? (
           <div className="flex flex-col gap-3">
@@ -137,11 +139,11 @@ export function GitHubHoverCard({ children }: { children: ReactNode }) {
             )}
 
             <div className="flex items-center gap-4 pt-0.5">
-              <StatPill icon={Users} value={data.followers} label="Followers" />
+              <StatPill icon={Users} value={data.followers} label={t.profile.followers} />
               <StatPill
                 icon={GitFork}
                 value={data.following}
-                label="Following"
+                label={t.profile.following}
               />
             </div>
           </div>

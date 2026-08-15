@@ -7,6 +7,8 @@ import type { Activity } from "react-activity-calendar";
 import { useTheme } from "next-themes";
 import { AnimatePresence, motion } from "framer-motion";
 import { BorderBeam } from "@/components/magicui/border-beam";
+import { useLanguage } from "@/components/language-provider";
+import type { Locale } from "@/i18n/config";
 
 interface TooltipData {
   date: string;
@@ -16,9 +18,9 @@ interface TooltipData {
   y: number;
 }
 
-function formatDate(dateStr: string): string {
+function formatDate(dateStr: string, locale: Locale): string {
   const date = new Date(dateStr + "T00:00:00");
-  return date.toLocaleDateString("zh-CN", {
+  return date.toLocaleDateString(locale === "zh" ? "zh-CN" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -26,9 +28,9 @@ function formatDate(dateStr: string): string {
   });
 }
 
-function formatCount(count: number): string {
+function formatCount(count: number, template: string): string {
   if (count === 0) return "";
-  return `${count} 次贡献`;
+  return template.replace("{count}", count.toLocaleString());
 }
 
 // Shared between the calendar and the tooltip swatch so the two never drift.
@@ -38,6 +40,7 @@ const CALENDAR_THEME = {
 };
 
 export function GithubContributions() {
+  const { locale, t } = useLanguage();
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [tooltip, setTooltip] = React.useState<TooltipData | null>(null);
@@ -191,7 +194,7 @@ export function GithubContributions() {
                       : { visibility: "hidden" }
                   }
                 >
-                  <div className="font-medium">{formatDate(tooltip.date)}</div>
+                  <div className="font-medium">{formatDate(tooltip.date, locale)}</div>
                   {tooltip.count > 0 && (
                     <div className="flex items-center gap-1.5 text-muted-foreground">
                       <span
@@ -203,7 +206,7 @@ export function GithubContributions() {
                             ][tooltip.level] ?? CALENDAR_THEME.dark[4],
                         }}
                       />
-                      {formatCount(tooltip.count)}
+                      {formatCount(tooltip.count, t.github.contributions)}
                     </div>
                   )}
                 </motion.div>
