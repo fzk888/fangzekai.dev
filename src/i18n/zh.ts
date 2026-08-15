@@ -117,6 +117,7 @@ export const zh: Translations = {
     write: "写一句留言",
     empty: "先写点什么再贴上墙。",
     saved: "已贴上墙",
+    rateLimited: "留言太快啦，过一会儿再试。",
     unavailable: "数据库还没连上。",
     justNow: "刚刚",
     today: "今天",

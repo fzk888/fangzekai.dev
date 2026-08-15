@@ -117,6 +117,7 @@ export const en = {
     write: "Leave a message",
     empty: "Write something before posting.",
     saved: "Posted",
+    rateLimited: "You're posting too quickly. Try again in a little while.",
     unavailable: "The guestbook database is not connected yet.",
     justNow: "just now",
     today: "today",

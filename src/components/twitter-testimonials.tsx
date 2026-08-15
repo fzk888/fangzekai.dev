@@ -15,6 +15,10 @@ type GuestbookNote = {
 };
 
 const MAX_MESSAGE_LENGTH = 120;
+const CARD_WIDTH = 232;
+const CARD_GAP = 16;
+const CARD_STEP = CARD_WIDTH + CARD_GAP;
+const AUTO_SCROLL_SPEED = 34;
 
 const starterNotes: GuestbookNote[] = [
   {
@@ -142,13 +146,17 @@ function GuestbookCard({
   note,
   locale,
   t,
+  isDuplicate = false,
 }: {
   note: GuestbookNote;
   locale: Locale;
   t: Translations;
+  isDuplicate?: boolean;
 }) {
   return (
     <article
+      role="listitem"
+      aria-hidden={isDuplicate || undefined}
       className="relative flex h-[92px] w-[232px] shrink-0 flex-col justify-between overflow-hidden rounded-lg border border-border/55 bg-card/50 p-3 shadow-sm backdrop-blur-sm"
     >
       <div
@@ -167,11 +175,24 @@ function GuestbookCard({
 export function TwitterTestimonials() {
   const { locale, t } = useLanguage();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const firstGroupRef = useRef<HTMLDivElement>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const scrollEndTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interactionResumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dragStateRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startScrollLeft: number;
+  } | null>(null);
+  const pauseReasonsRef = useRef(new Set<string>());
   const [message, setMessage] = useState("");
   const [notes, setNotes] = useState<GuestbookNote[]>(starterNotes);
   const [status, setStatus] = useState("");
   const [isWriting, setIsWriting] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [groupRepeatCount, setGroupRepeatCount] = useState(1);
 
   useEffect(() => {
     let cancelled = false;
@@ -179,7 +200,7 @@ export function TwitterTestimonials() {
     fetchGuestbookNotes()
       .then((remoteNotes) => {
         if (!cancelled) {
-          setNotes(remoteNotes.length ? remoteNotes : starterNotes);
+          setNotes(remoteNotes.length ? [...remoteNotes, ...starterNotes] : starterNotes);
         }
       })
       .catch(() => {
@@ -193,19 +214,146 @@ export function TwitterTestimonials() {
     };
   }, [t.guestbook.unavailable]);
 
-  const marqueeNotes = useMemo(() => [...notes, ...notes], [notes]);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotionPreference = () => setPrefersReducedMotion(mediaQuery.matches);
 
-  const scroll = useCallback((direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const scrollAmount = 320;
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
+    updateMotionPreference();
+    mediaQuery.addEventListener("change", updateMotionPreference);
+    return () => mediaQuery.removeEventListener("change", updateMotionPreference);
+  }, []);
+
+  useEffect(() => {
+    const viewport = scrollRef.current;
+    if (!viewport) return;
+
+    const updateRepeatCount = () => {
+      const singleSetWidth = Math.max(notes.length, 1) * CARD_STEP;
+      setGroupRepeatCount(
+        Math.max(1, Math.ceil((viewport.clientWidth + CARD_STEP) / singleSetWidth))
+      );
+    };
+
+    updateRepeatCount();
+    const resizeObserver = new ResizeObserver(updateRepeatCount);
+    resizeObserver.observe(viewport);
+    return () => resizeObserver.disconnect();
+  }, [notes.length]);
+
+  const groupNotes = useMemo(
+    () =>
+      Array.from({ length: groupRepeatCount }, () => notes).flat(),
+    [groupRepeatCount, notes]
+  );
+
+  const setPauseReason = useCallback((reason: string, active: boolean) => {
+    if (active) {
+      pauseReasonsRef.current.add(reason);
+    } else {
+      pauseReasonsRef.current.delete(reason);
+    }
+    setIsPaused(pauseReasonsRef.current.size > 0);
+  }, []);
+
+  const stopAutoScroll = useCallback(() => {
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     }
   }, []);
 
+  const normalizeScrollPosition = useCallback(() => {
+    const viewport = scrollRef.current;
+    const firstGroup = firstGroupRef.current;
+    if (!viewport || !firstGroup) return;
+
+    const loopWidth = firstGroup.offsetWidth;
+    if (loopWidth <= 0) return;
+
+    while (viewport.scrollLeft >= loopWidth) {
+      viewport.scrollLeft -= loopWidth;
+    }
+    while (viewport.scrollLeft < 0) {
+      viewport.scrollLeft += loopWidth;
+    }
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    if (scrollEndTimeoutRef.current) {
+      clearTimeout(scrollEndTimeoutRef.current);
+    }
+    scrollEndTimeoutRef.current = setTimeout(normalizeScrollPosition, 120);
+  }, [normalizeScrollPosition]);
+
+  const scheduleInteractionResume = useCallback((reason: string, delay: number) => {
+    if (interactionResumeTimeoutRef.current) {
+      clearTimeout(interactionResumeTimeoutRef.current);
+    }
+    interactionResumeTimeoutRef.current = setTimeout(() => {
+      normalizeScrollPosition();
+      setPauseReason(reason, false);
+    }, delay);
+  }, [normalizeScrollPosition, setPauseReason]);
+
+  useEffect(
+    () => () => {
+      if (scrollEndTimeoutRef.current) {
+        clearTimeout(scrollEndTimeoutRef.current);
+      }
+      if (interactionResumeTimeoutRef.current) {
+        clearTimeout(interactionResumeTimeoutRef.current);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    const viewport = scrollRef.current;
+    if (!viewport || isPaused || prefersReducedMotion) return;
+
+    let previousTime = performance.now();
+    let scrollPosition = viewport.scrollLeft;
+
+    const animate = (currentTime: number) => {
+      const elapsed = Math.min(currentTime - previousTime, 64);
+      previousTime = currentTime;
+      scrollPosition += (AUTO_SCROLL_SPEED * elapsed) / 1000;
+
+      const loopWidth = firstGroupRef.current?.offsetWidth ?? 0;
+      if (loopWidth > 0 && scrollPosition >= loopWidth) {
+        scrollPosition %= loopWidth;
+      }
+
+      viewport.scrollLeft = scrollPosition;
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animate);
+    return stopAutoScroll;
+  }, [groupNotes, isPaused, prefersReducedMotion, stopAutoScroll]);
+
+  const scroll = useCallback((direction: "left" | "right") => {
+    const viewport = scrollRef.current;
+    const firstGroup = firstGroupRef.current;
+    if (!viewport || !firstGroup) return;
+
+    stopAutoScroll();
+    setPauseReason("manual", true);
+
+    const loopWidth = firstGroup.offsetWidth;
+    if (direction === "left" && viewport.scrollLeft < CARD_STEP) {
+      viewport.scrollLeft += loopWidth;
+    } else {
+      normalizeScrollPosition();
+    }
+
+    viewport.scrollLeft += direction === "left" ? -CARD_STEP : CARD_STEP;
+    scheduleInteractionResume("manual", 300);
+  }, [normalizeScrollPosition, scheduleInteractionResume, setPauseReason, stopAutoScroll]);
+
   const submitNote = async () => {
+    if (isSubmitting) return;
+
     const trimmedMessage = message.trim();
     if (!trimmedMessage) {
       setStatus(t.guestbook.empty);
@@ -225,13 +373,18 @@ export function TwitterTestimonials() {
       });
       const data = await response.json().catch(() => null);
 
+      if (response.status === 429 || data?.code === "RATE_LIMITED") {
+        setStatus(t.guestbook.rateLimited);
+        return;
+      }
+
       if (!response.ok || !isGuestbookNote(data?.note)) {
         throw new Error(data?.error || "Failed to save note");
       }
 
       setNotes((currentNotes) => [
         data.note,
-        ...currentNotes.filter((note) => !note.id.startsWith("starter-")),
+        ...currentNotes.filter((note) => note.id !== data.note.id),
       ]);
       setMessage("");
       setStatus(t.guestbook.saved);
@@ -259,7 +412,13 @@ export function TwitterTestimonials() {
       </div>
 
       {isWriting ? (
-        <div className="rounded-full border border-border/55 bg-card/45 p-1 shadow-sm backdrop-blur">
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            submitNote();
+          }}
+          className="rounded-full border border-border/55 bg-card/45 p-1 shadow-sm backdrop-blur"
+        >
           <div className="flex items-center gap-2">
             <label className="sr-only" htmlFor="guestbook-message">
               {t.guestbook.inputLabel}
@@ -275,14 +434,10 @@ export function TwitterTestimonials() {
                 if (status) setStatus("");
               }}
               onKeyDown={(event) => {
-                if (event.key === "Escape") {
+                if (event.key === "Escape" && !isSubmitting) {
                   setIsWriting(false);
                   setMessage("");
                   return;
-                }
-
-                if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
-                  submitNote();
                 }
               }}
               placeholder={t.guestbook.placeholder}
@@ -292,10 +447,9 @@ export function TwitterTestimonials() {
               {message.length}/{MAX_MESSAGE_LENGTH}
             </span>
             <button
-              type="button"
-              onClick={submitNote}
+              type="submit"
               disabled={isSubmitting}
-              className="inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full bg-foreground px-3 text-xs font-medium text-background transition hover:bg-foreground/90 sm:px-3.5"
+              className="inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full bg-foreground px-3 text-xs font-medium text-background transition hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:px-3.5"
             >
               <Send className="size-3.5" />
               <span className="hidden sm:inline">
@@ -303,7 +457,7 @@ export function TwitterTestimonials() {
               </span>
             </button>
           </div>
-        </div>
+        </form>
       ) : (
         <div className="flex items-center gap-3">
           <button
@@ -312,27 +466,44 @@ export function TwitterTestimonials() {
               setIsWriting(true);
               if (status) setStatus("");
             }}
-            className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border/55 bg-card/45 px-3 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur transition hover:border-border hover:bg-card hover:text-foreground"
+            className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border/55 bg-card/45 px-3 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur transition hover:border-border hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <Send className="size-3.5" />
             {t.guestbook.write}
           </button>
-          {status ? <span className="text-[11px] text-muted-foreground">{status}</span> : null}
         </div>
       )}
 
-      <div className="group relative">
+      {status ? (
+        <p role="status" aria-live="polite" className="text-[11px] text-muted-foreground">
+          {status}
+        </p>
+      ) : null}
+
+      <div
+        className="group relative"
+        onFocusCapture={() => setPauseReason("focus", true)}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) {
+            setPauseReason("focus", false);
+          }
+        }}
+      >
         <button
+          type="button"
           onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-border bg-background/80 p-2 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-background group-hover:opacity-100"
+          onPointerUp={(event) => event.currentTarget.blur()}
+          className="absolute left-1 top-1/2 z-10 -translate-y-1/2 rounded-full border border-border bg-background/85 p-2 opacity-100 shadow-lg backdrop-blur-sm transition-all duration-200 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:left-0 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100"
           aria-label={t.accessibility.scrollLeft}
         >
           <ChevronLeft className="size-5" />
         </button>
 
         <button
+          type="button"
           onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-border bg-background/80 p-2 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-background group-hover:opacity-100"
+          onPointerUp={(event) => event.currentTarget.blur()}
+          className="absolute right-1 top-1/2 z-10 -translate-y-1/2 rounded-full border border-border bg-background/85 p-2 opacity-100 shadow-lg backdrop-blur-sm transition-all duration-200 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:right-0 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100"
           aria-label={t.accessibility.scrollRight}
         >
           <ChevronRight className="size-5" />
@@ -340,22 +511,86 @@ export function TwitterTestimonials() {
 
         <div
           ref={scrollRef}
-          className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
+          tabIndex={0}
+          role="region"
+          aria-label={t.guestbook.label}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+              event.preventDefault();
+              scroll(event.key === "ArrowLeft" ? "left" : "right");
+            }
+          }}
+          onPointerDown={(event) => {
+            if (interactionResumeTimeoutRef.current) {
+              clearTimeout(interactionResumeTimeoutRef.current);
+            }
+            stopAutoScroll();
+            setPauseReason("pointer", true);
+
+            if (event.pointerType === "mouse" && event.button === 0) {
+              event.currentTarget.setPointerCapture(event.pointerId);
+              dragStateRef.current = {
+                pointerId: event.pointerId,
+                startX: event.clientX,
+                startScrollLeft: event.currentTarget.scrollLeft,
+              };
+            }
+          }}
+          onPointerMove={(event) => {
+            const dragState = dragStateRef.current;
+            if (!dragState || dragState.pointerId !== event.pointerId) return;
+
+            event.preventDefault();
+            event.currentTarget.scrollLeft =
+              dragState.startScrollLeft - (event.clientX - dragState.startX);
+          }}
+          onPointerUp={(event) => {
+            if (dragStateRef.current?.pointerId === event.pointerId) {
+              event.currentTarget.releasePointerCapture(event.pointerId);
+              dragStateRef.current = null;
+            }
+            if (document.activeElement === event.currentTarget) {
+              event.currentTarget.blur();
+            }
+            scheduleInteractionResume("pointer", event.pointerType === "touch" ? 700 : 350);
+          }}
+          onPointerCancel={(event) => {
+            if (dragStateRef.current?.pointerId === event.pointerId) {
+              dragStateRef.current = null;
+            }
+            scheduleInteractionResume("pointer", 350);
+          }}
+          onWheel={() => {
+            stopAutoScroll();
+            setPauseReason("pointer", true);
+            scheduleInteractionResume("pointer", 300);
+          }}
+          onScroll={handleScroll}
+          className="touch-pan-x cursor-grab select-none overflow-x-auto overscroll-x-contain [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] [scrollbar-width:none] active:cursor-grabbing focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&::-webkit-scrollbar]:hidden"
         >
-          <div
-            className="flex w-max gap-4 hover:[animation-play-state:paused]"
-            style={{
-              animation: "scroll 62s linear infinite",
-            }}
-          >
-            {marqueeNotes.map((note, idx) => (
-              <GuestbookCard
-                key={`${note.id}-${idx}`}
-                note={note}
-                locale={locale}
-                t={t}
-              />
-            ))}
+          <div className="flex w-max">
+            <div ref={firstGroupRef} role="list" className="flex shrink-0 gap-4 pr-4">
+              {groupNotes.map((note, idx) => (
+                <GuestbookCard
+                  key={`primary-${note.id}-${idx}`}
+                  note={note}
+                  locale={locale}
+                  t={t}
+                  isDuplicate={idx >= notes.length}
+                />
+              ))}
+            </div>
+            <div aria-hidden="true" className="flex shrink-0 gap-4 pr-4">
+              {groupNotes.map((note, idx) => (
+                <GuestbookCard
+                  key={`duplicate-${note.id}-${idx}`}
+                  note={note}
+                  locale={locale}
+                  t={t}
+                  isDuplicate
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

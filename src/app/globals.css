@@ -294,6 +294,35 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   max-width: 100%;
 }
 
+.prose .mermaid-diagram {
+  overflow-x: auto;
+  padding: 1rem;
+  border: 1px solid hsl(var(--border) / 0.7);
+  border-radius: 0.75rem;
+  background: hsl(var(--card) / 0.7);
+  cursor: zoom-in;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.prose .mermaid-diagram:hover {
+  box-shadow: 0 8px 32px rgb(0 0 0 / 0.15);
+  border-color: hsl(var(--foreground) / 0.3);
+}
+
+.prose .mermaid-diagram svg {
+  display: block;
+  min-width: max-content;
+  max-width: none;
+  margin: 0 auto;
+}
+
+.mermaid-lightbox > svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
 /* Blog article images - clickable with hover effect */
 .prose img {
   max-width: 100%;

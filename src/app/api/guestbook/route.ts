@@ -1,4 +1,5 @@
 import { Redis } from "@upstash/redis";
+import { createHash } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +16,8 @@ const GUESTBOOK_KEY = "guestbook_notes";
 const GUESTBOOK_ID_KEY = "guestbook_note_id";
 const MAX_MESSAGE_LENGTH = 120;
 const MAX_NOTES = 50;
+const RATE_LIMIT_MAX = 3;
+const RATE_LIMIT_WINDOW_SECONDS = 10 * 60;
 const tones: GuestbookNote["tone"][] = ["sky", "lime", "rose", "violet", "amber", "slate"];
 
 function getRedis() {
@@ -36,6 +39,27 @@ function cleanMessage(value: unknown) {
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, MAX_MESSAGE_LENGTH);
+}
+
+function getClientIdentifier(request: NextRequest) {
+  const forwardedFor = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  const ip = forwardedFor || request.headers.get("x-real-ip") || "unknown";
+
+  return createHash("sha256").update(ip).digest("hex").slice(0, 32);
+}
+
+async function checkRateLimit(redis: Redis, request: NextRequest) {
+  const now = Math.floor(Date.now() / 1000);
+  const windowId = Math.floor(now / RATE_LIMIT_WINDOW_SECONDS);
+  const retryAfter = RATE_LIMIT_WINDOW_SECONDS - (now % RATE_LIMIT_WINDOW_SECONDS);
+  const key = `guestbook_rate_limit:${getClientIdentifier(request)}:${windowId}`;
+  const count = await redis.incr(key);
+
+  if (count === 1) {
+    await redis.expire(key, RATE_LIMIT_WINDOW_SECONDS + 60);
+  }
+
+  return { allowed: count <= RATE_LIMIT_MAX, retryAfter };
 }
 
 function parseNote(value: unknown): GuestbookNote | null {
@@ -98,6 +122,17 @@ export async function POST(request: NextRequest) {
 
     if (!message) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
+    }
+
+    const rateLimit = await checkRateLimit(redis, request);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: "Too many messages", code: "RATE_LIMITED", retryAfter: rateLimit.retryAfter },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimit.retryAfter) },
+        }
+      );
     }
 
     const numericId = await redis.incr(GUESTBOOK_ID_KEY);

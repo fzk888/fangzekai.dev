@@ -3,6 +3,7 @@
 import { motion, useMotionValue, useReducedMotion } from "framer-motion"
 import type { FC, ReactNode } from "react"
 import { useEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 
 export interface SmoothCursorProps {
   cursor?: ReactNode
@@ -224,7 +225,7 @@ export function SmoothCursor({
   const targetScale = isPressed ? 0.88 : isInteractive ? 1.12 : 1
   const targetOpacity = isVisible && !usesNativeCursor ? 1 : 0
 
-  return (
+  return createPortal(
     <motion.div
       aria-hidden="true"
       initial={false}
@@ -246,7 +247,7 @@ export function SmoothCursor({
         width: 25,
         height: 27,
         transformOrigin: "0 0",
-        zIndex: 100,
+        zIndex: 9999,
         pointerEvents: "none",
         willChange: "transform, opacity",
       }}
@@ -261,6 +262,7 @@ export function SmoothCursor({
       >
         {cursor}
       </div>
-    </motion.div>
+    </motion.div>,
+    document.body
   )
 }
